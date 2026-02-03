@@ -11,7 +11,7 @@ namespace SharingKnowledge.Data
 
         public virtual DbSet<CourseCategory> CourseCategories { get; set; } = null!;
 
-
+        
 
     }
 }
