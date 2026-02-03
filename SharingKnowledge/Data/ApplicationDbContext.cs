@@ -11,7 +11,11 @@ namespace SharingKnowledge.Data
 
         public virtual DbSet<CourseCategory> CourseCategories { get; set; } = null!;
 
-        
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
 
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
     }
 }
