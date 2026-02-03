@@ -1,6 +1,6 @@
 ﻿namespace SharingKnowledge.Common
 {
-    public class ValidationConstrains
+    public static class ValidationConstrains
     {
         /*OpenCourse property validation*/
         public const int CourseTitleMinLength = 2;

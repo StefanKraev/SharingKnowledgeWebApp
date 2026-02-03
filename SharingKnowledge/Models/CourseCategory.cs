@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static SharingKnowledge.Common.ValidationConstrains;
 
 namespace SharingKnowledge.Models
 {
@@ -8,6 +9,7 @@ namespace SharingKnowledge.Models
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(CategoryNameMaxLength)]
         public string Name { get; set; } = null!;
 
         public virtual ICollection<OpenCourse> Courses { get; set; } = new List<OpenCourse>();

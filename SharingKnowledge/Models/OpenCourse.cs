@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static SharingKnowledge.Common.ValidationConstrains;
 
 namespace SharingKnowledge.Models
 {
@@ -9,14 +10,17 @@ namespace SharingKnowledge.Models
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(CourseTitleMaxLength)]
         public string Title { get; set; } = null!;
 
         [Required]
+        [MaxLength(CourseDescriptionMaxLength)]
         public string Description { get; set; } = null!;
 
         [Required]
         public DateTime StartDate { get; set; }
 
+        [MaxLength(CourseImageUrlMaxLength)]
         public string? ImageUrl { get; set; }
 
         [Required]
