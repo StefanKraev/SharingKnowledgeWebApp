@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharingKnowledge.Models
 {
@@ -18,6 +19,10 @@ namespace SharingKnowledge.Models
 
         public string? ImageUrl { get; set; }
 
+        [Required]
+        [ForeignKey(nameof(CourseCategory))]
+        public int CategoryId { get; set; }
 
+        public virtual CourseCategory Category { get; set; } = null!;
     }
 }
