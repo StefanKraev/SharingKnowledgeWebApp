@@ -1,5 +1,5 @@
 ﻿@using System.Linq
-@model IEnumerable<SharingKnowledge.ViewModels.OpenCoursesAllViewModel>
+@model IEnumerable<SharingKnowledge.ViewModels.Courses.OpenCoursesAllViewModel>
 
 @{
     ViewData["Title"] = "Open Courses";
@@ -32,7 +32,7 @@ else
                         </p>
                         <p class="card-text">@course.Description</p>
                         <div class="mt-auto">
-                            <a asp-controller="OpenCourses" asp-action="Details" asp-route-id="@course.Title" class="btn btn-primary">View details</a>
+                            <a asp-controller="OpenCourses" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">View details</a>
                         </div>
                     </div>
                 </div>
