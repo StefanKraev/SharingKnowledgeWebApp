@@ -39,14 +39,30 @@ namespace SharingKnowledge.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            OpenCourse? openCourse = DbContext
+            if(id <= 0)
+            {
+                return BadRequest();
+            }
+
+            OpenCoursesDetailsViewModel? openCourse = DbContext
                 .OpenCourses
                 .AsNoTracking()
-                .FirstOrDefault(oc => oc.Id == id);
+                .Where(oc => oc.Id == id)
+                .Select(oc => new OpenCoursesDetailsViewModel
+                {
+                    Title = oc.Title,
+                    Description = oc.Description,
+                    StartDate = oc.StartDate,
+                    ImageUrl = oc.ImageUrl,
+                    CategoryName = oc.Category.Name
+                })
+                .SingleOrDefault();
+
             if (openCourse == null)
             {
                 return NotFound();
             }
+
             return View(openCourse);
         }
     }
