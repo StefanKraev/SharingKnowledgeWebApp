@@ -6,6 +6,8 @@ namespace SharingKnowledge.Controllers
     {
         public IActionResult Index()
         {
+
+
             return View();
         }
     }
