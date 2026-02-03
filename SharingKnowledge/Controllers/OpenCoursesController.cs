@@ -17,13 +17,9 @@ namespace SharingKnowledge.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<OpenCourse> openCourses = DbContext
+            var coursesAllViewModels = DbContext
                 .OpenCourses
                 .AsNoTracking()
-                .Include(oc => oc.Category)
-                .ToList();
-
-            IEnumerable<OpenCoursesAllViewModel> coursesAllViewModels = openCourses
                 .Select(oc => new OpenCoursesAllViewModel
                 {
                     Title = oc.Title,
