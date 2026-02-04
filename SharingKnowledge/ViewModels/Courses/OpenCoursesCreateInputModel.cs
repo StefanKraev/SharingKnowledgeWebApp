@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SharingKnowledge.Models;
+using System.ComponentModel.DataAnnotations;
 using static SharingKnowledge.Common.ValidationConstrains;
 
 namespace SharingKnowledge.ViewModels.Courses
@@ -20,5 +22,6 @@ namespace SharingKnowledge.ViewModels.Courses
         public string ?ImageUrl { get; set; }
         [Required]
         public int CategoryId { get; set; }
+        public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
     }
 }

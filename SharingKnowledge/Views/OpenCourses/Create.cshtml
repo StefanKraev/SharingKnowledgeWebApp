@@ -1,4 +1,6 @@
-﻿@model SharingKnowledge.ViewModels.Courses.OpenCoursesCreateInputModel
+﻿@using SharingKnowledge.Data
+@model SharingKnowledge.ViewModels.Courses.OpenCoursesCreateInputModel
+@inject ApplicationDbContext DbContext
 
 @{
     ViewData["Title"] = "Create Open Course";
@@ -37,7 +39,9 @@
 
     <div class="mb-3">
         <label asp-for="CategoryId" class="form-label">Course Category</label>
-        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+        <select asp-for="CategoryId"
+                asp-items="@(new SelectList(DbContext.CourseCategories, "Id", "Name"))"
+                class="form-select">
             <option value="">-- Select category --</option>
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>

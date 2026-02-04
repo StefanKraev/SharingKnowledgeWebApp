@@ -4,6 +4,7 @@ using Microsoft.Identity.Client;
 using SharingKnowledge.Data;
 using SharingKnowledge.Models;
 using SharingKnowledge.ViewModels.Courses;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics.Contracts;
 
 namespace SharingKnowledge.Controllers
@@ -69,7 +70,9 @@ namespace SharingKnowledge.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            OpenCoursesCreateInputModel openCoursesCreateInputModel = new OpenCoursesCreateInputModel();
 
+            return View(openCoursesCreateInputModel);
         }
     }
 }
