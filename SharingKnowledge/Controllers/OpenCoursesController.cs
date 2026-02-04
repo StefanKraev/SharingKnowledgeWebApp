@@ -112,7 +112,16 @@ namespace SharingKnowledge.Controllers
                 return View(inputModel);
             }
         }
-        
+
+        [HttpGet]
+        public IActionResult Edit([FromRoute] int id)
+        {
+            if(id <= 0)
+            {
+                return BadRequest();
+            }
+        }
+
         private bool CourseCategoryExists(int id)
         {
             return DbContext.CourseCategories.Any(e => e.Id == id);
