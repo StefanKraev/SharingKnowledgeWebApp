@@ -74,5 +74,49 @@ namespace SharingKnowledge.Controllers
 
             return View(openCoursesCreateInputModel);
         }
+
+        [HttpPost]
+        public IActionResult Create(OpenCoursesCreateInputModel inputModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(inputModel);
+            }
+
+            if(CourseCategoryExists(inputModel.CategoryId) == false)
+            {
+                ModelState.AddModelError(nameof(inputModel.CategoryId), "Selected category does not exist.");
+                return View(inputModel);
+            }
+
+            try
+            {
+                OpenCourse openCourse = new OpenCourse
+                {
+                    Title = inputModel.Title,
+                    Description = inputModel.Description,
+                    StartDate = inputModel.StartDate,
+                    ImageUrl = inputModel.ImageUrl,
+                    CategoryId = inputModel.CategoryId
+                };
+
+                DbContext.OpenCourses.Add(openCourse);
+                DbContext.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                ModelState.AddModelError(string.Empty, "An error occurred while creating the open course. Please try again.");
+                return View(inputModel);
+            }
+        }
+        
+        private bool CourseCategoryExists(int id)
+        {
+            return DbContext.CourseCategories.Any(e => e.Id == id);
+        }
+
     }
 }
