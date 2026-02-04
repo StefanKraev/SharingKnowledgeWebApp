@@ -66,6 +66,10 @@ namespace SharingKnowledge.Controllers
             return View(openCourse);
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
 
+        }
     }
 }
