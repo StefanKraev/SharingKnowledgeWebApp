@@ -124,12 +124,37 @@ namespace SharingKnowledge.Controllers
                 return BadRequest();
             }
 
+            if(OpenCourseExists(id) == false)
+            {
+                return NotFound();
+            }
+
+            OpenCoursesAllViewModel ?viewModel = DbContext
+                .OpenCourses
+                .AsNoTracking()
+                .Where(oc => oc.Id == id)
+                .Select(oc => new OpenCoursesAllViewModel
+                {
+                    Id = oc.Id,
+                    Title = oc.Title,
+                    Description = oc.Description,
+                    StartDate = oc.StartDate,
+                    ImageUrl = oc.ImageUrl,
+                    CategoryName = oc.Category.Name
+                })
+                .SingleOrDefault();
+
             return Ok();
         }
 
         private bool CourseCategoryExists(int id)
         {
             return DbContext.CourseCategories.Any(e => e.Id == id);
+        }
+
+        private bool OpenCourseExists(int id)
+        {
+            return DbContext.OpenCourses.Any(e => e.Id == id);
         }
 
     }
