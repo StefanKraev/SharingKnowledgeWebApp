@@ -65,5 +65,7 @@ namespace SharingKnowledge.Controllers
 
             return View(openCourse);
         }
+
+
     }
 }
