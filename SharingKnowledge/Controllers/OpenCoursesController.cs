@@ -27,7 +27,10 @@ namespace SharingKnowledge.Controllers
                 {
                     Id = oc.Id,
                     Title = oc.Title,
-                    Description = oc.Description,
+                    Description = oc.Description.
+                            Length > 100
+                          ? oc.Description.Substring(0, 97) + "..."
+                          : oc.Description,
                     StartDate = oc.StartDate,
                     ImageUrl = oc.ImageUrl,
                     CategoryName = oc.Category.Name
@@ -120,6 +123,8 @@ namespace SharingKnowledge.Controllers
             {
                 return BadRequest();
             }
+
+            return Ok();
         }
 
         private bool CourseCategoryExists(int id)
