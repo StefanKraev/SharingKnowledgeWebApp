@@ -73,7 +73,14 @@ namespace SharingKnowledge.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            OpenCoursesCreateInputModel openCoursesCreateInputModel = new OpenCoursesCreateInputModel();
+            OpenCoursesCreateInputModel openCoursesCreateInputModel = new OpenCoursesCreateInputModel
+            {
+                Categories = DbContext
+                    .CourseCategories
+                    .AsNoTracking()
+                    .OrderBy(cc => cc.Name)
+                    .ToList()
+            };
 
             return View(openCoursesCreateInputModel);
         }
@@ -119,32 +126,91 @@ namespace SharingKnowledge.Controllers
         [HttpGet]
         public IActionResult Edit([FromRoute] int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 return BadRequest();
             }
 
-            if(OpenCourseExists(id) == false)
+            OpenCourse? openCourse = DbContext
+                .OpenCourses
+                .Include(oc => oc.Category)
+                .SingleOrDefault(oc => oc.Id == id);
+
+            if (openCourse == null)
             {
                 return NotFound();
             }
 
-            OpenCoursesAllViewModel ?viewModel = DbContext
-                .OpenCourses
-                .AsNoTracking()
-                .Where(oc => oc.Id == id)
-                .Select(oc => new OpenCoursesAllViewModel
-                {
-                    Id = oc.Id,
-                    Title = oc.Title,
-                    Description = oc.Description,
-                    StartDate = oc.StartDate,
-                    ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category.Name
-                })
-                .SingleOrDefault();
+            OpenCoursesCreateInputModel inputModel = new OpenCoursesCreateInputModel
+            {
+                Title = openCourse.Title,
+                Description = openCourse.Description,
+                StartDate = openCourse.StartDate,
+                ImageUrl = openCourse.ImageUrl,
+                CategoryId = openCourse.CategoryId,
+                Categories = DbContext
+                    .CourseCategories
+                    .AsNoTracking()
+                    .OrderBy(cc => cc.Name)
+                    .ToList()
+            };
 
-            return Ok();
+            return View(inputModel);
+
+        }
+
+        [HttpPost]
+        public IActionResult Edit([FromRoute]int id, OpenCoursesCreateInputModel inputModel)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+            
+            OpenCourse? openCourse = DbContext
+                .OpenCourses
+                .Include(oc => oc.Category)
+                .SingleOrDefault(oc => oc.Id == id);
+
+            if(openCourse == null)
+            {
+                return NotFound();
+            }
+            inputModel.Categories = DbContext
+                    .CourseCategories
+                    .AsNoTracking()
+                    .OrderBy(cc => cc.Name)
+                    .ToList();
+            if(!ModelState.IsValid)
+            {
+                return View(inputModel);
+            }
+            if(CourseCategoryExists(inputModel.CategoryId) == false)
+            {
+                ModelState.AddModelError(nameof(inputModel.CategoryId), "Selected category does not exist.");
+                return View(inputModel);
+            }
+
+            try
+            {
+                openCourse.Title = inputModel.Title;
+                openCourse.Description = inputModel.Description;
+                openCourse.StartDate = inputModel.StartDate;
+                openCourse.ImageUrl = inputModel.ImageUrl;
+                openCourse.CategoryId = inputModel.CategoryId;
+
+                DbContext.OpenCourses.Update(openCourse);
+                DbContext.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                ModelState.AddModelError(string.Empty, "An error occurred while editing the open course. Please try again.");
+                return View(inputModel);
+            }
         }
 
         private bool CourseCategoryExists(int id)

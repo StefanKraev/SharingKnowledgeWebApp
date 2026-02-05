@@ -22,6 +22,6 @@ namespace SharingKnowledge.ViewModels.Courses
         public string ?ImageUrl { get; set; }
         [Required]
         public int CategoryId { get; set; }
-        public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
+        public IEnumerable<CourseCategory> Categories { get; set; } = new List<CourseCategory>();
     }
 }
