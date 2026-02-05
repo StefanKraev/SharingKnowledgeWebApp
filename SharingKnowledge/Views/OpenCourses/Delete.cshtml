@@ -1,0 +1,19 @@
+﻿@model SharingKnowledge.ViewModels.Courses.OpenCoursesDeleteViewModel
+
+@{
+    ViewData["Title"] = "Delete Course - " + (Model);
+}
+
+<h1 class="mb-4 text-danger">Delete Open Course</h1>
+
+<div class="alert alert-warning">
+    <strong>Warning:</strong> You are about to delete the course titled "<strong>@Model.Title</strong>". This action cannot be undone.
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>

@@ -213,6 +213,60 @@ namespace SharingKnowledge.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+            OpenCourse? openCourse = DbContext
+                .OpenCourses
+                .AsNoTracking()
+                .SingleOrDefault(oc => oc.Id == id);
+            if (openCourse == null)
+            {
+                return NotFound();
+            }
+
+            OpenCoursesDeleteViewModel viewModel = new OpenCoursesDeleteViewModel
+            {
+                Title = openCourse.Title
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Delete([FromRoute] int id, OpenCoursesDeleteViewModel viewModel)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+            OpenCourse? openCourse = DbContext
+                .OpenCourses
+                .SingleOrDefault(oc => oc.Id == id);
+            if (openCourse == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                DbContext.OpenCourses.Remove(openCourse);
+                DbContext.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                ModelState.AddModelError(string.Empty, "An error occurred while deleting the open course. Please try again.");
+                return View(viewModel);
+            }
+        }
+
+
         private bool CourseCategoryExists(int id)
         {
             return DbContext.CourseCategories.Any(e => e.Id == id);
