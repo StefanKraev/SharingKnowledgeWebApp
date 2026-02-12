@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using SharingKnowledge.Data;
+using SharingKnowledge.Models;
 
 namespace SharingKnowledge
 {
@@ -17,8 +18,8 @@ namespace SharingKnowledge
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => {
-
+            builder.Services.AddDefaultIdentity<Student>(options => { //User may have many roles other then student
+                                                                      //but for now student is the default choice
                 Identity(options, builder.Configuration);
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
