@@ -17,7 +17,8 @@ namespace SharingKnowledge.Data.Configurations
                 Description = "A beginner-friendly course covering C# fundamentals, types, control flow and basic OOP concepts.",
                 StartDate = new DateTime(2026, 03, 15),
                 ImageUrl = "https://example.com/images/csharp-intro.png",
-                CategoryId = 1
+                CategoryId = 1,
+                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
             },
             new OpenCourse
             {
@@ -26,7 +27,8 @@ namespace SharingKnowledge.Data.Configurations
                 Description = "Build dynamic web applications using Razor Pages, routing, model binding and forms.",
                 StartDate = new DateTime(2026, 04, 01),
                 ImageUrl = "https://example.com/images/razor-pages.png",
-                CategoryId = 1
+                CategoryId = 1,
+                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
             },
             new OpenCourse
             {
@@ -35,7 +37,8 @@ namespace SharingKnowledge.Data.Configurations
                 Description = "Learn EF Core fundamentals: DbContext, migrations, querying, relationships and seeding data.",
                 StartDate = new DateTime(2026, 05, 05),
                 ImageUrl = "https://example.com/images/efcore.png",
-                CategoryId = 2
+                CategoryId = 2,
+                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
             },
             new OpenCourse
             {
@@ -44,7 +47,8 @@ namespace SharingKnowledge.Data.Configurations
                 Description = "Covers HTML structure, semantic tags, CSS layout and responsive design principles.",
                 StartDate = new DateTime(2026, 03, 28),
                 ImageUrl = "https://example.com/images/html-css.png",
-                CategoryId = 3
+                CategoryId = 3,
+                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
             },
             new OpenCourse
             {
@@ -53,7 +57,8 @@ namespace SharingKnowledge.Data.Configurations
                 Description = "Introduction to JavaScript language features, DOM manipulation and basic async patterns.",
                 StartDate = new DateTime(2026, 04, 20),
                 ImageUrl = "https://example.com/images/js-fundamentals.png",
-                CategoryId = 3
+                CategoryId = 3,
+                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
             },
             new OpenCourse
             {
@@ -62,7 +67,8 @@ namespace SharingKnowledge.Data.Configurations
                 Description = "Principles and practice of unit testing in .NET with xUnit, mocking and testable design.",
                 StartDate = new DateTime(2026, 06, 01),
                 ImageUrl = "https://example.com/images/dotnet-testing.png",
-                CategoryId = 2
+                CategoryId = 2,
+                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
             }
         };
 

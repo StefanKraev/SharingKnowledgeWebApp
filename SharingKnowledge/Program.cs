@@ -67,7 +67,7 @@ namespace SharingKnowledge
             options.Password.RequireUppercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireUpper");
             options.Password.RequireLowercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireLower");
             options.Password.RequireNonAlphanumeric = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireNonAlphanumeric");
-
+            
 
 
         }
