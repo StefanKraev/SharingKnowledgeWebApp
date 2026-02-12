@@ -51,5 +51,21 @@ namespace SharingKnowledge
 
             app.Run();
         }
+
+        private static void Identity(IdentityOptions options, ConfigurationManager configurationManager)
+        {
+            options.SignIn.RequireConfirmedEmail = configurationManager.GetValue<bool>("IdentityOptions:SignIn:RequiredConformedEmail");
+
+            options.Lockout.MaxFailedAccessAttempts = configurationManager.GetValue<int>("IdentityOptions:Lockout:MaxFailedAttempts");
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(configurationManager.GetValue<int>("IdentityOptions:Lockout:LockoutDuration"));
+
+            options.Password.RequireDigit = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireDigit");
+            options.Password.RequireUppercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireUpper");
+            options.Password.RequireLowercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireLower");
+            options.Password.RequireNonAlphanumeric = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireNonAlphanumeric");
+
+
+
+        }
     }
 }
