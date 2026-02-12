@@ -13,5 +13,9 @@
         /*CourseCategory property validations*/
         public const int CategoryNameMinLength = 2;
         public const int CategoryNameMaxLength = 100;
+
+        /*Student property validations*/
+        public const string StudentFNRegularExpression = @"^\d{1}MI\d{7}$";
+        public const int StudentFNMaxLen = 15;
     }
 }
