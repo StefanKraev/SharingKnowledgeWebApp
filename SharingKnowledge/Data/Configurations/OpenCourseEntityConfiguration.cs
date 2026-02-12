@@ -74,6 +74,16 @@ namespace SharingKnowledge.Data.Configurations
                 .HasForeignKey(c => c.CategoryId) 
                 .OnDelete(DeleteBehavior.Restrict);
 
+            entity
+                .HasOne(c => c.Creator)
+                .WithMany(s => s.CreatedCourses)
+                .HasForeignKey(c => c.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity
+                .HasMany(c => c.EnrolledStudents)
+                .WithMany(s => s.EnrolledCourses);
+
             entity.HasData(_courses);
         }
     }
