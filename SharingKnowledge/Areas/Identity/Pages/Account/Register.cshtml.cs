@@ -90,6 +90,11 @@ namespace SharingKnowledge.Areas.Identity.Pages.Account
             [Display(Name = "Password")]
             public string Password { get; set; }
 
+            [Required]
+            [StringLength(10, MinimumLength = 5, ErrorMessage = "Faculty number must be between 5 and 10 characters.")]
+            [Display(Name = "Faculty Number")]
+            public string FacultyNumber { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -114,6 +119,8 @@ namespace SharingKnowledge.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+                user.FacultyNumber = Input.FacultyNumber;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
