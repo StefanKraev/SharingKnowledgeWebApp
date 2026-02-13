@@ -58,6 +58,7 @@ namespace SharingKnowledge
 
         private static void Identity(IdentityOptions options, ConfigurationManager configurationManager)
         {
+            //options.SignIn.RequireConfirmedAccount = false;
             options.SignIn.RequireConfirmedEmail = configurationManager.GetValue<bool>("IdentityOptions:SignIn:RequiredConformedEmail");
 
             options.Lockout.MaxFailedAccessAttempts = configurationManager.GetValue<int>("IdentityOptions:Lockout:MaxFailedAttempts");

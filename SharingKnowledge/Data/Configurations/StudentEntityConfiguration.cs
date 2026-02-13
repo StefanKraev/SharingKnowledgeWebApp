@@ -15,7 +15,6 @@ namespace SharingKnowledge.Data.Configurations
                              //be in conflict with IdentityUser::id
 
             string ghostAdminId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45";
-            var hasher = new PasswordHasher<Student>(); //There was no way to disable password hashing in Program.cs
 
             var admin = new Student
             {
@@ -26,10 +25,10 @@ namespace SharingKnowledge.Data.Configurations
                 NormalizedEmail = "ADMIN@SHARINGKNOWLEDGE.COM",
                 FacultyNumber = "0MI0000000",
                 EmailConfirmed = true,
-                SecurityStamp = "3235650d-6e47-49f3-9d0a-04664879201a"
+                SecurityStamp = "3235650d-6e47-49f3-9d0a-04664879201a",
+                ConcurrencyStamp = "86778f79-246e-4861-8271-6c589679199c",
+                PasswordHash = "AQAAAAIAAYagAAAAEGVx7nHYW18d6vEjqAitwoxLyms6pEPIbLVGX7rivzEBJMpHtztkFthMsfbEaXgWvQ=="
             };
-
-            admin.PasswordHash = hasher.HashPassword(admin, "Admin123!");
 
             entity.HasData(admin);
         }
