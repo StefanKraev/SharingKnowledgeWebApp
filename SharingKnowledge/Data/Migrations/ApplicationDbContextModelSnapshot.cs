@@ -74,6 +74,71 @@ namespace SharingKnowledge.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -159,21 +224,6 @@ namespace SharingKnowledge.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OpenCourseStudent", b =>
-                {
-                    b.Property<int>("EnrolledCoursesId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EnrolledStudentsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("EnrolledCoursesId", "EnrolledStudentsId");
-
-                    b.HasIndex("EnrolledStudentsId");
-
-                    b.ToTable("OpenCourseStudent");
-                });
-
             modelBuilder.Entity("SharingKnowledge.Models.CourseCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -189,7 +239,7 @@ namespace SharingKnowledge.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CourseCategories");
+                    b.ToTable("CourseCategories", (string)null);
 
                     b.HasData(
                         new
@@ -255,10 +305,6 @@ namespace SharingKnowledge.Data.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -280,16 +326,13 @@ namespace SharingKnowledge.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("CreatorId");
-
-                    b.ToTable("OpenCourses");
+                    b.ToTable("OpenCourses", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             CategoryId = 1,
-                            CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45",
                             Description = "A beginner-friendly course covering C# fundamentals, types, control flow and basic OOP concepts.",
                             ImageUrl = "https://example.com/images/csharp-intro.png",
                             StartDate = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -299,7 +342,6 @@ namespace SharingKnowledge.Data.Migrations
                         {
                             Id = 2,
                             CategoryId = 1,
-                            CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45",
                             Description = "Build dynamic web applications using Razor Pages, routing, model binding and forms.",
                             ImageUrl = "https://example.com/images/razor-pages.png",
                             StartDate = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -309,7 +351,6 @@ namespace SharingKnowledge.Data.Migrations
                         {
                             Id = 3,
                             CategoryId = 2,
-                            CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45",
                             Description = "Learn EF Core fundamentals: DbContext, migrations, querying, relationships and seeding data.",
                             ImageUrl = "https://example.com/images/efcore.png",
                             StartDate = new DateTime(2026, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -319,7 +360,6 @@ namespace SharingKnowledge.Data.Migrations
                         {
                             Id = 4,
                             CategoryId = 3,
-                            CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45",
                             Description = "Covers HTML structure, semantic tags, CSS layout and responsive design principles.",
                             ImageUrl = "https://example.com/images/html-css.png",
                             StartDate = new DateTime(2026, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -329,7 +369,6 @@ namespace SharingKnowledge.Data.Migrations
                         {
                             Id = 5,
                             CategoryId = 3,
-                            CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45",
                             Description = "Introduction to JavaScript language features, DOM manipulation and basic async patterns.",
                             ImageUrl = "https://example.com/images/js-fundamentals.png",
                             StartDate = new DateTime(2026, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -339,103 +378,10 @@ namespace SharingKnowledge.Data.Migrations
                         {
                             Id = 6,
                             CategoryId = 2,
-                            CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45",
                             Description = "Principles and practice of unit testing in .NET with xUnit, mocking and testable design.",
                             ImageUrl = "https://example.com/images/dotnet-testing.png",
                             StartDate = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Unit Testing in .NET"
-                        });
-                });
-
-            modelBuilder.Entity("SharingKnowledge.Models.Student", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FacultyNumber")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FacultyNumber")
-                        .IsUnique();
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "007e37ed-27e5-43cb-a8b7-a3b14d054f45",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "aa0574e9-1325-431f-a2fa-ed2d7fa83f66",
-                            Email = "admin@sharingknowledge.com",
-                            EmailConfirmed = true,
-                            FacultyNumber = "0MI0000000",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@SHARINGKNOWLEDGE.COM",
-                            NormalizedUserName = "GHOSTADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAWlUe2Hax0Inm/pQBMy7iSEi9tdp8v/AnSLrDcnoM+NkHB0gZSu8K9Zf0FzOQNzZw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "3235650d-6e47-49f3-9d0a-04664879201a",
-                            TwoFactorEnabled = false,
-                            UserName = "GhostAdmin"
                         });
                 });
 
@@ -450,7 +396,7 @@ namespace SharingKnowledge.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SharingKnowledge.Models.Student", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -459,7 +405,7 @@ namespace SharingKnowledge.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SharingKnowledge.Models.Student", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -474,7 +420,7 @@ namespace SharingKnowledge.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharingKnowledge.Models.Student", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -483,24 +429,9 @@ namespace SharingKnowledge.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SharingKnowledge.Models.Student", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OpenCourseStudent", b =>
-                {
-                    b.HasOne("SharingKnowledge.Models.OpenCourse", null)
-                        .WithMany()
-                        .HasForeignKey("EnrolledCoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SharingKnowledge.Models.Student", null)
-                        .WithMany()
-                        .HasForeignKey("EnrolledStudentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -513,25 +444,12 @@ namespace SharingKnowledge.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SharingKnowledge.Models.Student", "Creator")
-                        .WithMany("CreatedCourses")
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Category");
-
-                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("SharingKnowledge.Models.CourseCategory", b =>
                 {
                     b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("SharingKnowledge.Models.Student", b =>
-                {
-                    b.Navigation("CreatedCourses");
                 });
 #pragma warning restore 612, 618
         }
