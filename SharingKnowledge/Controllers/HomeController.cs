@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SharingKnowledge.ViewModels;
+using SharingKnowledge.Web.ViewModels;
 
 namespace SharingKnowledge.Controllers
 {

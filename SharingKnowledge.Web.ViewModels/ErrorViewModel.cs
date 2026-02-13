@@ -1,4 +1,4 @@
-namespace SharingKnowledge.ViewModels
+namespace SharingKnowledge.Web.ViewModels
 {
     public class ErrorViewModel
     {

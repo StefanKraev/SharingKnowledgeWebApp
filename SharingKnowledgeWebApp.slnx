@@ -1,3 +1,11 @@
 <Solution>
-  <Project Path="SharingKnowledge/SharingKnowledge.csproj" />
+  <Folder Name="/Data/">
+    <Project Path="SharingKnowledge.Data.Models/SharingKnowledge.Data.Models.csproj" Id="c3a4da46-a486-49fb-9c60-296afb7b2b54" />
+    <Project Path="SharingKnowledge.Data/SharingKnowledge.Data.csproj" Id="9cf33499-ebcf-4956-80a0-08d64962d24d" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="SharingKnowledge.Web.ViewModels/SharingKnowledge.Web.ViewModels.csproj" Id="f280c841-ed30-44c9-a7fd-9062978d3ce7" />
+    <Project Path="SharingKnowledge/SharingKnowledge.csproj" />
+  </Folder>
+  <Project Path="SharingKnowledge.Common/SharingKnowledge.Common.csproj" Id="7c9f8e14-f802-4d17-9204-50c0fc17a5f2" />
 </Solution>

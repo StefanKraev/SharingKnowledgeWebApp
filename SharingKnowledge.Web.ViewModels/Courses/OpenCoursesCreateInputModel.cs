@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using SharingKnowledge.Models;
+﻿using SharingKnowledge.Models;
 using System.ComponentModel.DataAnnotations;
 using static SharingKnowledge.Common.ValidationConstrains;
 
