@@ -9,7 +9,7 @@ using System.Diagnostics.Contracts;
 
 namespace SharingKnowledge.Controllers
 {
-    public class OpenCoursesController : Controller
+    public class OpenCoursesController : ControllerBase
     {
         private readonly ApplicationDbContext DbContext;
         public OpenCoursesController(ApplicationDbContext dbContext)
