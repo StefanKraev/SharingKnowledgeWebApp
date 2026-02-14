@@ -18,7 +18,20 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/images/background-image.avif') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+.main-container {
+
+
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #212529;
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +41,16 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+.footer {
+    background-color: rgba(33, 37, 41, 0.7) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    color: white !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.footer a {
+    color: #0dcaf0 !important;
 }

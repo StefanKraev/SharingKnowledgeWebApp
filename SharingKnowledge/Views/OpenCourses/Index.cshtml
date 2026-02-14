@@ -34,14 +34,22 @@ else
                         </p>
                         <p class="card-text">@course.Description</p>
                         <div class="mt-auto">
-                            <a asp-controller="OpenCourses" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">View details</a>
-                            @if (currentUserId != null && course.CreatorId == currentUserId)
-                            {
-                                <div class="btn-group">
-                                    <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-sm btn-outline-warning">Edit</a>
-                                    <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-sm btn-outline-danger">Delete</a>
-                                </div>
-                            }
+                            <div class="d-flex gap-2">
+                                <a asp-controller="OpenCourses" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary flex-fill">
+                                    View details
+                                </a>
+
+                                @if (currentUserId != null && course.CreatorId == currentUserId)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-warning flex-fill" title="Edit">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+
+                                    <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-danger flex-fill" title="Delete">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>

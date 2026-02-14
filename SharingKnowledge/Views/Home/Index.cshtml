@@ -2,7 +2,36 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="py-5 text-center">
+    <h1 class="display-3 fw-bold mb-4 text-dark" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+        Your Future is Built on <br />
+        <span class="text-dark">Knowledge & Shared Experience</span>
+    </h1>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <p class="lead fs-4 text-secondary mb-5 lh-lg">
+                We believe that the shortest path to success in the IT industry is
+                through a <strong>helping hand.</strong>
+                <span class="fst-italic">SharingKnowledge</span> is more than just a platform;
+                it is a community born from the philosophy of <strong>mutual support</strong>.
+            </p>
+
+            <hr class="w-25 mx-auto mb-5" />
+
+            <p class="fs-5 text-muted mb-5">
+                Our courses are crafted by professionals who have already walked your path
+                and now choose to give back by sharing their invaluable expertise with you.
+            </p>
+
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                <a asp-controller="OpenCourses" asp-action="Index" class="btn btn-primary btn-lg px-4 gap-3 shadow">
+                    Explore Courses
+                </a>
+                <a asp-controller="Home" asp-action="Privacy" class="btn btn-outline-secondary btn-lg px-4">
+                    Privacy
+                </a>
+            </div>
+        </div>
+    </div>
 </div>

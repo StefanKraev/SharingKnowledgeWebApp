@@ -10,7 +10,10 @@
     <div class="card mb-4 shadow-sm">
         @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
         {
-            <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Title" style="object-fit:cover; height:320px;" />
+            <img src="@Model.ImageUrl"
+                 class="card-img-top bg-light"
+                 alt="@Model.Title"
+                 style="object-fit: contain; height: 320px; width: 100%;" />
         }
 
         <div class="card-body">

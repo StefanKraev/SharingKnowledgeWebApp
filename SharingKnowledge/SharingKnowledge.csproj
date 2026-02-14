@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SharingKnowledge.Data.Models\SharingKnowledge.Data.Models.csproj" />
     <ProjectReference Include="..\SharingKnowledge.Data\SharingKnowledge.Data.csproj" />
     <ProjectReference Include="..\SharingKnowledge.Services.Core\SharingKnowledge.Services.Core.csproj" />
