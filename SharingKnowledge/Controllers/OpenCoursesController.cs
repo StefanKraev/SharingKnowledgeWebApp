@@ -42,20 +42,8 @@ namespace SharingKnowledge.Controllers
                 return BadRequest();
             }
 
-            OpenCoursesDetailsViewModel? openCourse = await DbContext
-                .OpenCourses
-                .AsNoTracking()
-                .Where(oc => oc.Id == id)
-                .Select(oc => new OpenCoursesDetailsViewModel
-                {
-                    Title = oc.Title,
-                    Description = oc.Description,
-                    StartDate = oc.StartDate,
-                    ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category.Name,
-                    AuthorEmail = oc.Creator.Email ?? "Email not found!"
-                })
-                .SingleOrDefaultAsync();
+            OpenCoursesDetailsViewModel? openCourse = 
+                await openCoursesService.GetCourseDetailsAsync(id);
 
             if (openCourse == null)
             {

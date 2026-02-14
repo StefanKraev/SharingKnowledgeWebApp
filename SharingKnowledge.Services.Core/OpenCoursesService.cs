@@ -18,6 +18,24 @@ namespace SharingKnowledge.Services.Core
             this.context = context;
         }
 
+        public async Task<OpenCoursesDetailsViewModel?> GetCourseDetailsAsync(int id)
+        {
+            return await context
+                .OpenCourses
+                .AsNoTracking()
+                .Where(oc => oc.Id == id)
+                .Select(oc => new OpenCoursesDetailsViewModel
+                {
+                    Title = oc.Title,
+                    Description = oc.Description,
+                    StartDate = oc.StartDate,
+                    ImageUrl = oc.ImageUrl,
+                    CategoryName = oc.Category.Name,
+                    AuthorEmail = oc.Creator.Email ?? "Email not found!"
+                })
+                .SingleOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<OpenCoursesAllViewModel>> GetAllCoursesAsync()
         {
             return await context
@@ -66,11 +84,6 @@ namespace SharingKnowledge.Services.Core
         }
 
         public Task<IEnumerable<CourseCategory>> GetCategoriesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OpenCoursesDetailsViewModel?> GetCourseDetailsAsync(int id)
         {
             throw new NotImplementedException();
         }
