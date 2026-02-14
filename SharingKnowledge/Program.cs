@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using SharingKnowledge.Data;
 using SharingKnowledge.Models;
+using SharingKnowledge.Services.Core;
+using SharingKnowledge.Services.Core.Interfaces;
 
 namespace SharingKnowledge
 {
@@ -17,6 +19,8 @@ namespace SharingKnowledge
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services.AddScoped<IOpenCoursesService, OpenCoursesService>();
 
             builder.Services.AddDefaultIdentity<Student>(options => { //User may have many roles other then student
                                                                       //but for now student is the default choice

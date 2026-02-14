@@ -7,38 +7,28 @@ using SharingKnowledge.ViewModels.Courses;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using SharingKnowledge.Services.Core.Interfaces;
 
 namespace SharingKnowledge.Controllers
 {
     public class OpenCoursesController : ControllerBase
     {
         private readonly ApplicationDbContext DbContext;
-        public OpenCoursesController(ApplicationDbContext dbContext)
+
+        private readonly IOpenCoursesService openCoursesService;
+
+        public OpenCoursesController(ApplicationDbContext dbContext, IOpenCoursesService openCoursesService)
         {
             this.DbContext = dbContext;
+            this.openCoursesService = openCoursesService;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<OpenCoursesAllViewModel> coursesAllViewModels = await DbContext
-                .OpenCourses
-                .AsNoTracking()
-                .Select(oc => new OpenCoursesAllViewModel
-                {
-                    Id = oc.Id,
-                    Title = oc.Title,
-                    Description = oc.Description.
-                            Length > 100
-                          ? oc.Description.Substring(0, 97) + "..."
-                          : oc.Description,
-                    StartDate = oc.StartDate,
-                    ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category.Name,
-                    CreatorId = oc.CreatorId
-                })
-                .ToListAsync();
+            IEnumerable<OpenCoursesAllViewModel> coursesAllViewModels =
+                await openCoursesService.GetAllCoursesAsync();
 
             return View(coursesAllViewModels);
         }
