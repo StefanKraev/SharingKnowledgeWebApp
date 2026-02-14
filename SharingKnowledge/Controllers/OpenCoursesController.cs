@@ -56,14 +56,8 @@ namespace SharingKnowledge.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            OpenCoursesCreateInputModel openCoursesCreateInputModel = new OpenCoursesCreateInputModel
-            {
-                Categories = await DbContext
-                    .CourseCategories
-                    .AsNoTracking()
-                    .OrderBy(cc => cc.Name)
-                    .ToListAsync()
-            };
+            OpenCoursesCreateInputModel openCoursesCreateInputModel = 
+                await openCoursesService.CreateCourseInput();
 
             return View(openCoursesCreateInputModel);
         }
@@ -73,14 +67,14 @@ namespace SharingKnowledge.Controllers
         {
             if (!ModelState.IsValid)
             {
-                await PopulateCategoriesAsync(inputModel);
+                inputModel.Categories = (await openCoursesService.GetCategoriesAsync()).ToList();
                 return View(inputModel);
             }
 
-            if (await CourseCategoryExistsAsync(inputModel.CategoryId) == false)
+            if (await openCoursesService.CategoryExistsAsync(inputModel.CategoryId) == false)
             {
                 ModelState.AddModelError(nameof(inputModel.CategoryId), "Selected category does not exist.");
-                await PopulateCategoriesAsync(inputModel);
+                inputModel.Categories = (await openCoursesService.GetCategoriesAsync()).ToList();
                 return View(inputModel);
             }
 
@@ -93,19 +87,7 @@ namespace SharingKnowledge.Controllers
 
             try
             {
-                OpenCourse openCourse = new OpenCourse
-                {
-                    Title = inputModel.Title,
-                    Description = inputModel.Description,
-                    StartDate = inputModel.StartDate,
-                    ImageUrl = inputModel.ImageUrl,
-                    CategoryId = inputModel.CategoryId,
-                    CreatorId = userId,
-                    EnrolledStudents = new List<Student>()
-                };
-
-                await DbContext.OpenCourses.AddAsync(openCourse);
-                await DbContext.SaveChangesAsync();
+                await openCoursesService.CreateCourseAsync(inputModel, userId);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -113,7 +95,7 @@ namespace SharingKnowledge.Controllers
             {
                 Console.WriteLine(exception);
                 ModelState.AddModelError(string.Empty, "An error occurred while creating the open course. Please try again.");
-                await PopulateCategoriesAsync(inputModel);
+                inputModel.Categories = (await openCoursesService.GetCategoriesAsync()).ToList();
                 return View(inputModel);
             }
         }
@@ -128,37 +110,20 @@ namespace SharingKnowledge.Controllers
 
             string? userId = GetUserId();
 
-            OpenCourse? openCourse = await DbContext
-                .OpenCourses
-                .Include(oc => oc.Category)
-                .SingleOrDefaultAsync(oc => oc.Id == id);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
-            if (openCourse == null)
+            OpenCoursesCreateInputModel ?inputModel = 
+                await openCoursesService.GetCourseForEditAsync(id, userId);
+
+            if (inputModel == null)
             {
                 return NotFound();
             }
 
-            if (userId == null || openCourse.CreatorId != userId)
-            {
-               return RedirectToAction(nameof(Index));
-            }
-
-            OpenCoursesCreateInputModel inputModel = new OpenCoursesCreateInputModel
-            {
-                Title = openCourse.Title,
-                Description = openCourse.Description,
-                StartDate = openCourse.StartDate,
-                ImageUrl = openCourse.ImageUrl,
-                CategoryId = openCourse.CategoryId,
-                Categories = await DbContext
-                    .CourseCategories
-                    .AsNoTracking()
-                    .OrderBy(cc => cc.Name)
-                    .ToListAsync()
-            };
-
             return View(inputModel);
-
         }
 
         [HttpPost]
@@ -171,54 +136,36 @@ namespace SharingKnowledge.Controllers
 
             string? userId = GetUserId();
 
-            OpenCourse? openCourse = await DbContext
-                .OpenCourses
-                .Include(oc => oc.Category)
-                .SingleOrDefaultAsync(oc => oc.Id == id);
+            if (userId == null) 
+            {
+                return RedirectToAction("Login", "Account"); ;
+            }
 
-            if(openCourse == null)
+            bool categoryExists = 
+                await openCoursesService.CategoryExistsAsync(inputModel.CategoryId);
+
+            if (!ModelState.IsValid || !categoryExists)
+            {
+                if (!categoryExists)
+                {
+                    ModelState.AddModelError(nameof(inputModel.CategoryId), "Selected category does not exist.");
+                }
+
+                inputModel.Categories = 
+                    (await openCoursesService.GetCategoriesAsync()).ToList();
+
+                return View(inputModel);
+            }
+
+            bool isSuccess = 
+                await openCoursesService.EditCourseAsync(id, inputModel, userId);
+
+            if (!isSuccess)
             {
                 return NotFound();
             }
 
-            if (userId == null || openCourse.CreatorId != userId)
-            {
-                return Forbid();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                await PopulateCategoriesAsync(inputModel);
-                return View(inputModel);
-            }
-
-            if(await CourseCategoryExistsAsync(inputModel.CategoryId) == false)
-            {
-                await PopulateCategoriesAsync(inputModel);
-                ModelState.AddModelError(nameof(inputModel.CategoryId), "Selected category does not exist.");
-                return View(inputModel);
-            }
-
-            try
-            {
-                openCourse.Title = inputModel.Title;
-                openCourse.Description = inputModel.Description;
-                openCourse.StartDate = inputModel.StartDate;
-                openCourse.ImageUrl = inputModel.ImageUrl;
-                openCourse.CategoryId = inputModel.CategoryId;
-
-                await DbContext.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
-
-            }
-            catch (Exception exception)
-            {
-                await PopulateCategoriesAsync(inputModel);
-                Console.WriteLine(exception);
-                ModelState.AddModelError(string.Empty, "An error occurred while editing the open course. Please try again.");
-                return View(inputModel);
-            }
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -292,19 +239,6 @@ namespace SharingKnowledge.Controllers
                 ModelState.AddModelError(string.Empty, "An error occurred while deleting the open course. Please try again.");
                 return View(viewModel);
             }
-        }
-
-        private async Task PopulateCategoriesAsync(OpenCoursesCreateInputModel model)
-        {
-            model.Categories = await DbContext.CourseCategories
-                .AsNoTracking()
-                .OrderBy(c => c.Name)
-                .ToListAsync();
-        }
-
-        private async Task<bool> CourseCategoryExistsAsync(int categoryId)
-        {
-            return await DbContext.CourseCategories.AnyAsync(c => c.Id == categoryId);
         }
 
     }

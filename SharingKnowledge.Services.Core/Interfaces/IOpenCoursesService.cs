@@ -12,6 +12,8 @@ namespace SharingKnowledge.Services.Core.Interfaces
 
         Task CreateCourseAsync(OpenCoursesCreateInputModel inputModel, string userId); //create
 
+        Task<OpenCoursesCreateInputModel> CreateCourseInput(); //create
+
         Task<OpenCoursesCreateInputModel?> GetCourseForEditAsync(int id, string userId); //edit
 
         Task<bool> EditCourseAsync(int id, OpenCoursesCreateInputModel inputModel, string userId); //edit
