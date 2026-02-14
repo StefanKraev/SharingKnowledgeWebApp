@@ -13,13 +13,10 @@ namespace SharingKnowledge.Controllers
 {
     public class OpenCoursesController : ControllerBase
     {
-        private readonly ApplicationDbContext DbContext;
-
         private readonly IOpenCoursesService openCoursesService;
 
-        public OpenCoursesController(ApplicationDbContext dbContext, IOpenCoursesService openCoursesService)
+        public OpenCoursesController(IOpenCoursesService openCoursesService)
         {
-            this.DbContext = dbContext;
             this.openCoursesService = openCoursesService;
         }
 
@@ -178,26 +175,18 @@ namespace SharingKnowledge.Controllers
 
             string? userId = GetUserId();
 
-            OpenCourse? openCourse = await DbContext
-                .OpenCourses
-                .AsNoTracking()
-                .SingleOrDefaultAsync(oc => oc.Id == id);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
-            if (openCourse == null)
+            OpenCoursesDeleteViewModel? viewModel =
+                await openCoursesService.GetCourseForDeleteAsync(id, userId);
+
+            if (viewModel == null)
             {
                 return NotFound();
             }
-
-            if (userId == null || openCourse.CreatorId != userId)
-            {
-                return Forbid();
-            }
-
-            OpenCoursesDeleteViewModel viewModel = new OpenCoursesDeleteViewModel
-            {
-                Id = openCourse.Id,
-                Title = openCourse.Title
-            };
 
             return View(viewModel);
         }
@@ -205,40 +194,27 @@ namespace SharingKnowledge.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id, OpenCoursesDeleteViewModel viewModel)
         {
-            string? userId = GetUserId();
-
             if (id <= 0)
             {
                 return BadRequest();
             }
 
-            OpenCourse? openCourse = await DbContext
-                .OpenCourses
-                .SingleOrDefaultAsync(oc => oc.Id == id);
+            string? userId = GetUserId();
 
-            if (openCourse == null)
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            bool isDeleted = 
+                await openCoursesService.DeleteCourseAsync(id, userId);
+
+            if (!isDeleted)
             {
                 return NotFound();
             }
 
-            if (userId == null || openCourse.CreatorId != userId)
-            {
-                return Forbid();
-            }
-
-            try
-            {
-                DbContext.OpenCourses.Remove(openCourse);
-                await DbContext.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-                ModelState.AddModelError(string.Empty, "An error occurred while deleting the open course. Please try again.");
-                return View(viewModel);
-            }
+            return RedirectToAction(nameof(Index));
         }
 
     }

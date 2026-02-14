@@ -146,14 +146,47 @@ namespace SharingKnowledge.Services.Core
             }
         }
 
-        public Task<bool> DeleteCourseAsync(int id, string userId)
+        public async Task<OpenCoursesDeleteViewModel?> GetCourseForDeleteAsync(int id, string userId)
         {
-            throw new NotImplementedException();
+            OpenCourse? openCourse = await context
+                .OpenCourses
+                .Include(oc => oc.Category)
+                .SingleOrDefaultAsync(oc => oc.Id == id);
+
+            if (openCourse == null)
+            {
+                return null;
+            }
+
+            if (userId == null || openCourse.CreatorId != userId)
+            {
+                return null;
+            }
+
+            OpenCoursesDeleteViewModel viewModel = new OpenCoursesDeleteViewModel
+            {
+                Id = openCourse.Id,
+                Title = openCourse.Title
+            };
+
+            return viewModel;
         }
 
-        public Task<OpenCoursesDeleteViewModel?> GetCourseForDeleteAsync(int id, string userId)
+        public async Task<bool> DeleteCourseAsync(int id, string userId)
         {
-            throw new NotImplementedException();
+            OpenCourse ?course = await context
+                .OpenCourses
+                .FirstOrDefaultAsync(oc => oc.Id == id);
+
+            if (course == null || course.CreatorId != userId)
+            {
+                return false;
+            }
+
+            context.OpenCourses.Remove(course);
+            await context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<IEnumerable<CourseCategory>> GetCategoriesAsync()
