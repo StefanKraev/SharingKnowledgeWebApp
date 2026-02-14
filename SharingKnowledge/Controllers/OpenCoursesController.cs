@@ -105,6 +105,13 @@ namespace SharingKnowledge.Controllers
                 return View(inputModel);
             }
 
+            string? userId = GetUserId();
+
+            if(string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             try
             {
                 OpenCourse openCourse = new OpenCourse
@@ -113,7 +120,9 @@ namespace SharingKnowledge.Controllers
                     Description = inputModel.Description,
                     StartDate = inputModel.StartDate,
                     ImageUrl = inputModel.ImageUrl,
-                    CategoryId = inputModel.CategoryId
+                    CategoryId = inputModel.CategoryId,
+                    CreatorId = userId,
+                    EnrolledStudents = new List<Student>()
                 };
 
                 await DbContext.OpenCourses.AddAsync(openCourse);
