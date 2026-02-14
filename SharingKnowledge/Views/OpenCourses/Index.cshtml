@@ -1,8 +1,10 @@
 ﻿@using System.Linq
+@using System.Security.Claims
 @model IEnumerable<SharingKnowledge.ViewModels.Courses.OpenCoursesAllViewModel>
 
 @{
     ViewData["Title"] = "Open Courses";
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <h1 class="mb-4">Open Courses</h1>
@@ -33,6 +35,13 @@ else
                         <p class="card-text">@course.Description</p>
                         <div class="mt-auto">
                             <a asp-controller="OpenCourses" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">View details</a>
+                            @if (currentUserId != null && course.CreatorId == currentUserId)
+                            {
+                                <div class="btn-group">
+                                    <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-sm btn-outline-warning">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

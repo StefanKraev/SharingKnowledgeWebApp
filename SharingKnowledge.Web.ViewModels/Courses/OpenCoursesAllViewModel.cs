@@ -21,5 +21,8 @@ namespace SharingKnowledge.ViewModels.Courses
         [Required]
 
         public string CategoryName { get; set; } = null!;
+
+        [Required]
+        public string CreatorId { get; set; } = null!;
     }
 }

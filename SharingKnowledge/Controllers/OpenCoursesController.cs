@@ -35,7 +35,8 @@ namespace SharingKnowledge.Controllers
                           : oc.Description,
                     StartDate = oc.StartDate,
                     ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category.Name
+                    CategoryName = oc.Category.Name,
+                    CreatorId = oc.CreatorId
                 })
                 .ToListAsync();
 
@@ -147,6 +148,8 @@ namespace SharingKnowledge.Controllers
                 return BadRequest();
             }
 
+            string? userId = GetUserId();
+
             OpenCourse? openCourse = await DbContext
                 .OpenCourses
                 .Include(oc => oc.Category)
@@ -155,6 +158,11 @@ namespace SharingKnowledge.Controllers
             if (openCourse == null)
             {
                 return NotFound();
+            }
+
+            if (userId == null || openCourse.CreatorId != userId)
+            {
+               return RedirectToAction(nameof(Index));
             }
 
             OpenCoursesCreateInputModel inputModel = new OpenCoursesCreateInputModel
@@ -182,7 +190,9 @@ namespace SharingKnowledge.Controllers
             {
                 return BadRequest();
             }
-            
+
+            string? userId = GetUserId();
+
             OpenCourse? openCourse = await DbContext
                 .OpenCourses
                 .Include(oc => oc.Category)
@@ -193,7 +203,12 @@ namespace SharingKnowledge.Controllers
                 return NotFound();
             }
 
-            if(!ModelState.IsValid)
+            if (userId == null || openCourse.CreatorId != userId)
+            {
+                return Forbid();
+            }
+
+            if (!ModelState.IsValid)
             {
                 await PopulateCategoriesAsync(inputModel);
                 return View(inputModel);
