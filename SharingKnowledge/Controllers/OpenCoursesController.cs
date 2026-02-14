@@ -61,7 +61,8 @@ namespace SharingKnowledge.Controllers
                     Description = oc.Description,
                     StartDate = oc.StartDate,
                     ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category.Name
+                    CategoryName = oc.Category.Name,
+                    AuthorEmail = oc.Creator.Email ?? "Email not found!"
                 })
                 .SingleOrDefaultAsync();
 

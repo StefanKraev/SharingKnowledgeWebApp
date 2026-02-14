@@ -18,5 +18,8 @@ namespace SharingKnowledge.ViewModels.Courses
         [Required]
 
         public string CategoryName { get; set; } = null!;
+
+        [Required]
+        public string AuthorEmail { get; set; } = null!;
     }
 }
