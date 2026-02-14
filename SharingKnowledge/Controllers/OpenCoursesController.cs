@@ -251,6 +251,8 @@ namespace SharingKnowledge.Controllers
                 return BadRequest();
             }
 
+            string? userId = GetUserId();
+
             OpenCourse? openCourse = await DbContext
                 .OpenCourses
                 .AsNoTracking()
@@ -261,8 +263,14 @@ namespace SharingKnowledge.Controllers
                 return NotFound();
             }
 
+            if (userId == null || openCourse.CreatorId != userId)
+            {
+                return Forbid();
+            }
+
             OpenCoursesDeleteViewModel viewModel = new OpenCoursesDeleteViewModel
             {
+                Id = openCourse.Id,
                 Title = openCourse.Title
             };
 
@@ -272,6 +280,8 @@ namespace SharingKnowledge.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id, OpenCoursesDeleteViewModel viewModel)
         {
+            string? userId = GetUserId();
+
             if (id <= 0)
             {
                 return BadRequest();
@@ -284,6 +294,11 @@ namespace SharingKnowledge.Controllers
             if (openCourse == null)
             {
                 return NotFound();
+            }
+
+            if (userId == null || openCourse.CreatorId != userId)
+            {
+                return Forbid();
             }
 
             try

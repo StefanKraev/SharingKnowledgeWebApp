@@ -1,7 +1,7 @@
 ﻿@model SharingKnowledge.ViewModels.Courses.OpenCoursesDeleteViewModel
 
 @{
-    ViewData["Title"] = "Delete Course - " + (Model);
+    ViewData["Title"] = "Delete Course - " + (Model.Title);
 }
 
 <h1 class="mb-4 text-danger">Delete Open Course</h1>
@@ -12,6 +12,9 @@
 
 <form asp-action="Delete" method="post">
     @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id" />
+
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-danger">Delete</button>
         <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
