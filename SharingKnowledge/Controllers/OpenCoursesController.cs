@@ -28,11 +28,6 @@ namespace SharingKnowledge.Controllers
         {
             string? userId = GetUserId();
 
-            if(userId == null)
-            {
-                return BadRequest();
-            }
-
             IEnumerable<OpenCoursesMyCoursesViewModel> coursesAllViewModels =
                 await openCoursesService.GetAllCoursesAsync(userId);
 

@@ -63,14 +63,14 @@ namespace SharingKnowledge
         private static void Identity(IdentityOptions options, ConfigurationManager configurationManager)
         {
             //options.SignIn.RequireConfirmedAccount = false;
-            options.SignIn.RequireConfirmedEmail = configurationManager.GetValue<bool>("IdentityOptions:SignIn:RequiredConformedEmail");
+            options.SignIn.RequireConfirmedEmail = configurationManager.GetValue<bool>("IdentityOptions:SignIn:RequiredConfirmedEmail");
 
             options.Lockout.MaxFailedAccessAttempts = configurationManager.GetValue<int>("IdentityOptions:Lockout:MaxFailedAttempts");
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(configurationManager.GetValue<int>("IdentityOptions:Lockout:LockoutDuration"));
 
             options.Password.RequireDigit = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireDigit");
-            options.Password.RequireUppercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireUpper");
-            options.Password.RequireLowercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireLower");
+            options.Password.RequireUppercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireUppercase");
+            options.Password.RequireLowercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireLowercase");
             options.Password.RequireNonAlphanumeric = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireNonAlphanumeric");
             
 
