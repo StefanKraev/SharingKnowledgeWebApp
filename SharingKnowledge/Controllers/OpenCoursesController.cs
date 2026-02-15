@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using SharingKnowledge.Data;
 using SharingKnowledge.Models;
-using SharingKnowledge.ViewModels.Courses;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Diagnostics.Contracts;
-using Microsoft.AspNetCore.Authorization;
 using SharingKnowledge.Services.Core.Interfaces;
+using SharingKnowledge.ViewModels.Courses;
+using SharingKnowledge.Web.ViewModels.Courses;
+using System.Diagnostics.Contracts;
+using System.Security.Claims;
 
 namespace SharingKnowledge.Controllers
 {
@@ -24,8 +26,15 @@ namespace SharingKnowledge.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<OpenCoursesAllViewModel> coursesAllViewModels =
-                await openCoursesService.GetAllCoursesAsync();
+            string? userId = GetUserId();
+
+            if(userId == null)
+            {
+                return BadRequest();
+            }
+
+            IEnumerable<OpenCoursesMyCoursesViewModel> coursesAllViewModels =
+                await openCoursesService.GetAllCoursesAsync(userId);
 
             return View(coursesAllViewModels);
         }
@@ -217,5 +226,93 @@ namespace SharingKnowledge.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> MyCourses()
+        {
+            string? userId = GetUserId();
+
+            if (userId == null)
+            {
+                return BadRequest();
+            }
+
+            Student student = 
+                await openCoursesService.GetStudentByIdAsync(userId);
+
+            if(student == null)
+            {
+                return BadRequest();
+            }
+
+            ICollection<OpenCoursesMyCoursesViewModel> myCourses = 
+                await openCoursesService.GetAllStudentCourses(student);
+
+            return View(myCourses);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Enroll(int courseId)
+        {
+            string? userId = GetUserId();
+
+            if(userId == null)
+            {
+                return BadRequest();
+            }
+
+            Student student = 
+                await openCoursesService.GetStudentByIdAsync(userId);
+
+            if (student == null)
+            {
+                return NotFound();
+            } 
+
+            OpenCourse course = 
+                await openCoursesService.GetCourseByIdAsync(courseId);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            if (!student.EnrolledCourses.Any(c => c.Id == courseId))
+            {
+                await openCoursesService.AddCourseToStudentAsync(course, student);
+            }
+
+            return RedirectToAction("MyCourses");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Unenroll(int courseId)
+        {
+            string? userId = GetUserId();
+
+            if (userId == null)
+            {
+                return BadRequest();
+            } 
+
+            Student student = 
+                await openCoursesService.GetStudentByIdAsync(userId);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            OpenCourse course = 
+                await openCoursesService.GetCourseByIdAsync(courseId);
+
+            if (course == null)
+            {
+                return NotFound();
+            } 
+
+            await openCoursesService.UnenrollStudentAsync(student, course);
+
+            return RedirectToAction(nameof(MyCourses));
+        }
     }
 }

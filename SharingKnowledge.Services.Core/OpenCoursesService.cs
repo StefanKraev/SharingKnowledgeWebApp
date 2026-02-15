@@ -3,6 +3,7 @@ using SharingKnowledge.Data;
 using SharingKnowledge.Models;
 using SharingKnowledge.Services.Core.Interfaces;
 using SharingKnowledge.ViewModels.Courses;
+using SharingKnowledge.Web.ViewModels.Courses;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,13 +20,14 @@ namespace SharingKnowledge.Services.Core
             this.context = context;
         }
 
-        public async Task<IEnumerable<OpenCoursesAllViewModel>> GetAllCoursesAsync()
+        public async Task<IEnumerable<OpenCoursesMyCoursesViewModel>> GetAllCoursesAsync(string userId)
         {
             return await context
                 .OpenCourses
                 .AsNoTracking()
+                .Include(c => c.EnrolledStudents)
                 .OrderByDescending(oc => oc.StartDate)
-                .Select(oc => new OpenCoursesAllViewModel
+                .Select(oc => new OpenCoursesMyCoursesViewModel
                 {
                     Id = oc.Id,
                     Title = oc.Title,
@@ -36,7 +38,9 @@ namespace SharingKnowledge.Services.Core
                     StartDate = oc.StartDate,
                     ImageUrl = oc.ImageUrl,
                     CategoryName = oc.Category.Name,
-                    CreatorId = oc.CreatorId
+                    CreatorId = oc.CreatorId,
+
+                    IsEnrolled = userId != null && oc.EnrolledStudents.Any(s => s.Id == userId)
                 })
                 .ToListAsync();
         }
@@ -187,6 +191,54 @@ namespace SharingKnowledge.Services.Core
             await context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<Student?> GetStudentByIdAsync(string userId)
+        {
+            return await context
+                .Users
+                .OfType<Student>()
+                .Include(s => s.EnrolledCourses)
+                .ThenInclude(c => c.Category)
+                .FirstOrDefaultAsync(s => s.Id == userId);
+        }
+
+        public async Task<OpenCourse?> GetCourseByIdAsync(int id)
+        {
+            return await context.OpenCourses.FindAsync(id);
+        }
+
+        public async Task AddCourseToStudentAsync(OpenCourse course, Student student)
+        {
+           
+            student.EnrolledCourses.Add(course);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<OpenCoursesMyCoursesViewModel>> GetAllStudentCourses(Student student)
+        {
+            return student
+                .EnrolledCourses
+                .Select(c => new OpenCoursesMyCoursesViewModel
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    Description = c.Description,
+                    StartDate = c.StartDate,
+                    ImageUrl = c.ImageUrl,
+                    CategoryName = c.Category?.Name ?? "General",
+                    CreatorId = c.CreatorId,
+                    IsEnrolled = true
+                }).ToList();
+        }
+
+        public async Task UnenrollStudentAsync(Student student, OpenCourse course)
+        {
+            if (student.EnrolledCourses.Any(c => c.Id == course.Id))
+            {
+                student.EnrolledCourses.Remove(course);
+                await context.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<CourseCategory>> GetCategoriesAsync()

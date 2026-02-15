@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using SharingKnowledge.ViewModels.Courses;
 using SharingKnowledge.Models;
+using SharingKnowledge.Web.ViewModels.Courses;
 
 namespace SharingKnowledge.Services.Core.Interfaces
 {
     public interface IOpenCoursesService
     {
-        Task<IEnumerable<OpenCoursesAllViewModel>> GetAllCoursesAsync(); //all
+        Task<IEnumerable<OpenCoursesMyCoursesViewModel>> GetAllCoursesAsync(string userId); //all
 
         Task<OpenCoursesDetailsViewModel?> GetCourseDetailsAsync(int id); //details
 
@@ -25,5 +26,15 @@ namespace SharingKnowledge.Services.Core.Interfaces
         Task<IEnumerable<CourseCategory>> GetCategoriesAsync(); // getCategories
 
         Task<bool> CategoryExistsAsync(int categoryId); //existCategory
+
+        Task<Student> GetStudentByIdAsync(string userId); //studentById
+
+        Task<OpenCourse> GetCourseByIdAsync(int id); //courseById
+
+        Task AddCourseToStudentAsync(OpenCourse course, Student student); //addCourseToStudent
+
+        Task<ICollection<OpenCoursesMyCoursesViewModel>> GetAllStudentCourses(Student student); //DisplayMyCourses
+
+        Task UnenrollStudentAsync(Student student, OpenCourse course); //unenrollCourse
     }
 }

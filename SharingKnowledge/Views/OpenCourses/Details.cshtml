@@ -1,4 +1,5 @@
-﻿@model SharingKnowledge.ViewModels.Courses.OpenCoursesDetailsViewModel
+﻿@using System.Globalization
+@model SharingKnowledge.ViewModels.Courses.OpenCoursesDetailsViewModel
 
 @{
     ViewData["Title"] = Model?.Title ?? "Course details";
@@ -21,7 +22,7 @@
 
             <p class="text-muted mb-2">
                 <small>
-                    <span class="me-3"><strong>Starts:</strong> @Model.StartDate.ToString("MMMM d, yyyy")</span>
+                    <span class="me-3"><strong>Starts:</strong> @Model.StartDate.ToString("MMMM d, yyyy", CultureInfo.InvariantCulture)</span>
                     <span class="badge bg-secondary">@Model.CategoryName</span>
                 </small>
             </p>

@@ -1,6 +1,7 @@
 ﻿@using System.Linq
 @using System.Security.Claims
-@model IEnumerable<SharingKnowledge.ViewModels.Courses.OpenCoursesAllViewModel>
+@using System.Globalization
+@model IEnumerable<SharingKnowledge.Web.ViewModels.Courses.OpenCoursesMyCoursesViewModel>
 
 @{
     ViewData["Title"] = "Open Courses";
@@ -28,26 +29,42 @@ else
                         <h5 class="card-title">@course.Title</h5>
                         <p class="card-text text-muted mb-2">
                             <small>
-                                <span class="me-2"><strong>Starts:</strong> @course.StartDate.ToString("MMMM d, yyyy")</span>
+                                <span class="me-2"><strong>Starts:</strong> @course.StartDate.ToString("MMMM d, yyyy", CultureInfo.InvariantCulture)</span>
                                 <span class="badge bg-secondary">@course.CategoryName</span>
                             </small>
                         </p>
                         <p class="card-text">@course.Description</p>
                         <div class="mt-auto">
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-2 mb-2">
                                 <a asp-controller="OpenCourses" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary flex-fill">
                                     View details
                                 </a>
 
-                                @if (currentUserId != null && course.CreatorId == currentUserId)
+                                @if (currentUserId != null)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-warning flex-fill" title="Edit">
-                                        <i class="bi bi-pencil-square"></i> Edit
-                                    </a>
-
-                                    <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-danger flex-fill" title="Delete">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </a>
+                                    @if (course.CreatorId == currentUserId)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-warning flex-fill">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-danger flex-fill">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    }
+                                    else if (course.IsEnrolled)
+                                    {
+                                        <div class="btn btn-outline-success flex-fill disabled">
+                                            <i class="bi bi-check-lg"></i> Enrolled
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <form asp-controller="OpenCourses" asp-action="Enroll" asp-route-courseId="@course.Id" method="post" class="flex-fill">
+                                            <button type="submit" class="btn btn-success w-100">
+                                                <i class="bi bi-plus-circle"></i> Enroll
+                                            </button>
+                                        </form>
+                                    }
                                 }
                             </div>
                         </div>
