@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using SharingKnowledge.Data;
+using SharingKnowledge.Data.Repository;
+using SharingKnowledge.Data.Repository.Contracts;
 using SharingKnowledge.Models;
 using SharingKnowledge.Services.Core;
 using SharingKnowledge.Services.Core.Interfaces;
@@ -19,6 +21,8 @@ namespace SharingKnowledge
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services.AddScoped<ICourseRepository, OpenCourseRepository>();
 
             builder.Services.AddScoped<IOpenCoursesService, OpenCoursesService>();
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharingKnowledge.Data;
+using SharingKnowledge.Data.Repository.Contracts;
 using SharingKnowledge.Models;
 using SharingKnowledge.Services.Core.Interfaces;
 using SharingKnowledge.ViewModels.Courses;
@@ -13,18 +14,17 @@ namespace SharingKnowledge.Services.Core
 {
     public class OpenCoursesService : IOpenCoursesService
     {
-        private readonly ApplicationDbContext context;
+        private readonly ICourseRepository courseRepository;
 
-        public OpenCoursesService(ApplicationDbContext context)
+        public OpenCoursesService(ICourseRepository courseRepository)
         {
-            this.context = context;
+            this.courseRepository = courseRepository;
         }
 
         public async Task<IEnumerable<OpenCoursesMyCoursesViewModel>> GetAllCoursesAsync(string userId)
         {
-            return await context
-                .OpenCourses
-                .AsNoTracking()
+            return await courseRepository
+                .GetAllOpenCourses()
                 .Include(c => c.EnrolledStudents)
                 .OrderByDescending(oc => oc.StartDate)
                 .Select(oc => new OpenCoursesMyCoursesViewModel
