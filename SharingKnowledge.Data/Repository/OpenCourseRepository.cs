@@ -16,6 +16,13 @@ namespace SharingKnowledge.Data.Repository
             this.dbContext = dbContext;
         }
 
+        public async Task<bool> AddOpenCourseAsync(OpenCourse openCourse)
+        {
+            await dbContext.AddAsync(openCourse);
+            int resultCode = await dbContext.SaveChangesAsync();
+            return resultCode == 1;
+        }
+
         public async Task<IEnumerable<OpenCourse>> GetAllMaterializedOpenCourses()
         {
             return await dbContext

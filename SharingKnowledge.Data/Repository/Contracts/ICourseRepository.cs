@@ -11,5 +11,7 @@ namespace SharingKnowledge.Data.Repository.Contracts
         IQueryable<OpenCourse> GetAllOpenCourses();
 
         Task<IEnumerable<OpenCourse>> GetAllMaterializedOpenCourses();
+
+        Task<bool> AddOpenCourseAsync(OpenCourse openCourse);
     }
 }

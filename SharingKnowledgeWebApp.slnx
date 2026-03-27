@@ -4,6 +4,7 @@
     <Project Path="SharingKnowledge.Data/SharingKnowledge.Data.csproj" Id="9cf33499-ebcf-4956-80a0-08d64962d24d" />
   </Folder>
   <Folder Name="/Services/">
+    <Project Path="SharingKnowledge.Services.Common/SharingKnowledge.Services.Common.csproj" Id="fa9688ff-41e8-4cc2-9f97-a95d4e7f0a4c" />
     <Project Path="SharingKnowledge.Services.Core/SharingKnowledge.Services.Core.csproj" Id="35030a32-651a-4e8e-aeb6-3b4da427334a" />
   </Folder>
   <Folder Name="/Web/">

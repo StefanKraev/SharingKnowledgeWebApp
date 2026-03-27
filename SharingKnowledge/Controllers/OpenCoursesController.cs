@@ -8,18 +8,24 @@ using SharingKnowledge.Models;
 using SharingKnowledge.Services.Core.Interfaces;
 using SharingKnowledge.ViewModels.Courses;
 using SharingKnowledge.Web.ViewModels.Courses;
-using System.Diagnostics.Contracts;
 using System.Security.Claims;
+using SharingKnowledge.Services.Common;
+using SharingKnowledge.Services.Common.Exceptions;
+using static SharingKnowledge.Common.OutputMessages.OpenCourseMessages;
+using static SharingKnowledge.Common.OutputMessages.GenericMessages;
 
 namespace SharingKnowledge.Controllers
 {
     public class OpenCoursesController : ControllerBase
     {
+        private readonly ILogger<OpenCoursesController> logger;
+
         private readonly IOpenCoursesService openCoursesService;
 
-        public OpenCoursesController(IOpenCoursesService openCoursesService)
+        public OpenCoursesController(IOpenCoursesService openCoursesService, ILogger<OpenCoursesController> logger)
         {
             this.openCoursesService = openCoursesService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -92,10 +98,21 @@ namespace SharingKnowledge.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            catch (OpenCourseCreationFaliureExcpetion exception)
+            {
+                logger.LogError(exception, OpenCourseCreationFailureMessage);
+
+                Console.WriteLine(exception);
+                ModelState.AddModelError(string.Empty, OpenCourseCreationFailureMessage);
+                inputModel.Categories = (await openCoursesService.GetCategoriesAsync()).ToList();
+                return View(inputModel);
+            }
             catch (Exception exception)
             {
+                logger.LogError(exception, UnexpectedErrorMessage);
+
                 Console.WriteLine(exception);
-                ModelState.AddModelError(string.Empty, "An error occurred while creating the open course. Please try again.");
+                ModelState.AddModelError(string.Empty, UnexpectedErrorMessage);
                 inputModel.Categories = (await openCoursesService.GetCategoriesAsync()).ToList();
                 return View(inputModel);
             }

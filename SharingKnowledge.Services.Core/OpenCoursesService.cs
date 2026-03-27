@@ -1,17 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharingKnowledge.Data;
+using SharingKnowledge.Services.Common;
 using SharingKnowledge.Data.Repository.Contracts;
 using SharingKnowledge.Models;
 using SharingKnowledge.Services.Core.Interfaces;
 using SharingKnowledge.ViewModels.Courses;
 using SharingKnowledge.Web.ViewModels.Courses;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
+using SharingKnowledge.Services.Common.Exceptions;
+
 
 namespace SharingKnowledge.Services.Core
-{
+{ 
     public class OpenCoursesService : IOpenCoursesService
     {
         private readonly ICourseRepository courseRepository;
@@ -76,8 +76,12 @@ namespace SharingKnowledge.Services.Core
                 EnrolledStudents = new List<Student>()
             };
 
-            await context.OpenCourses.AddAsync(openCourse);
-            await context.SaveChangesAsync();
+            bool valid = await courseRepository.AddOpenCourseAsync(openCourse);
+
+            if (!valid)
+            {
+                throw new OpenCourseCreationFaliureExcpetion();
+            }
         }
 
         public async Task<OpenCoursesCreateInputModel> CreateCourseInput()
