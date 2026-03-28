@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharingKnowledge.Data;
-using SharingKnowledge.Services.Common;
+using SharingKnowledge.Data.Repository;
 using SharingKnowledge.Data.Repository.Contracts;
 using SharingKnowledge.Models;
+using SharingKnowledge.Services.Common;
+using SharingKnowledge.Services.Common.Exceptions;
 using SharingKnowledge.Services.Core.Interfaces;
 using SharingKnowledge.ViewModels.Courses;
 using SharingKnowledge.Web.ViewModels.Courses;
 using System.Data;
-using SharingKnowledge.Services.Common.Exceptions;
 
 
 namespace SharingKnowledge.Services.Core
@@ -23,44 +24,34 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<IEnumerable<OpenCoursesMyCoursesViewModel>> GetAllCoursesAsync(string userId)
         {
-            return await courseRepository
-                .GetAllOpenCourses()
-                .Include(c => c.EnrolledStudents)
-                .OrderByDescending(oc => oc.StartDate)
+            IEnumerable<OpenCourse> allOpenCourses = await courseRepository.GetAllOpenCoursesAsync();
+
+            return allOpenCourses
                 .Select(oc => new OpenCoursesMyCoursesViewModel
                 {
                     Id = oc.Id,
                     Title = oc.Title,
-                    Description = oc.Description.
-                            Length > 100
-                          ? oc.Description.Substring(0, 97) + "..."
-                          : oc.Description,
+                    Description = oc.Description.Length > 100
+                        ? oc.Description.Substring(0, 97) + "..."
+                        : oc.Description,
                     StartDate = oc.StartDate,
                     ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category.Name,
+                    CategoryName = oc.Category?.Name ?? "General",
                     CreatorId = oc.CreatorId,
-
                     IsEnrolled = userId != null && oc.EnrolledStudents.Any(s => s.Id == userId)
-                })
-                .ToListAsync();
+                });
         }
 
         public async Task<OpenCoursesDetailsViewModel?> GetCourseDetailsAsync(int id)
         {
-            return await context
-                .OpenCourses
-                .AsNoTracking()
-                .Where(oc => oc.Id == id)
-                .Select(oc => new OpenCoursesDetailsViewModel
-                {
-                    Title = oc.Title,
-                    Description = oc.Description,
-                    StartDate = oc.StartDate,
-                    ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category.Name,
-                    AuthorEmail = oc.Creator.Email ?? "Email not found!"
-                })
-                .SingleOrDefaultAsync();
+            OpenCoursesDetailsViewModel viewModel = await courseRepository.GetOpenCourseByIdAsync(id);
+
+            if (viewModel == null)
+            {
+                return null;
+            }
+
+            return viewModel;
         }
 
         public async Task CreateCourseAsync(OpenCoursesCreateInputModel inputModel, string userId)
