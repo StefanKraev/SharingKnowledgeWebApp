@@ -105,5 +105,25 @@ namespace SharingKnowledge.Data.Repository
             return await dbContext.OpenCourses
                 .SingleOrDefaultAsync(oc => oc.Id == courseId);
         }
+
+        public async Task<OpenCourse?> GetCourseForDeleteAsync(int courseId)
+        {
+            return await dbContext
+                .OpenCourses
+                .FirstOrDefaultAsync(c => c.Id == courseId);
+        }
+
+        public async Task<bool> DeleteCourseAsync(OpenCourse openCourse)
+        {
+            try
+            {
+                dbContext.OpenCourses.Remove(openCourse);
+                return await dbContext.SaveChangesAsync() > 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

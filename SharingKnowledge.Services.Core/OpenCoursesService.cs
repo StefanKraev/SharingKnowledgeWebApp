@@ -144,10 +144,7 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<OpenCoursesDeleteViewModel?> GetCourseForDeleteAsync(int id, string userId)
         {
-            OpenCourse? openCourse = await context
-                .OpenCourses
-                .Include(oc => oc.Category)
-                .SingleOrDefaultAsync(oc => oc.Id == id);
+            OpenCourse? openCourse = await courseRepository.GetCourseByIdForEditAsync(id);
 
             if (openCourse == null)
             {
@@ -170,19 +167,14 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<bool> DeleteCourseAsync(int id, string userId)
         {
-            OpenCourse ?course = await context
-                .OpenCourses
-                .FirstOrDefaultAsync(oc => oc.Id == id);
+            OpenCourse? course = await courseRepository.GetCourseForDeleteAsync(id);
 
             if (course == null || course.CreatorId != userId)
             {
                 return false;
             }
 
-            context.OpenCourses.Remove(course);
-            await context.SaveChangesAsync();
-
-            return true;
+            return await courseRepository.DeleteCourseAsync(course);
         }
 
         public async Task<Student?> GetStudentByIdAsync(string userId)

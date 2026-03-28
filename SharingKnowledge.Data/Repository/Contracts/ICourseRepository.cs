@@ -23,6 +23,10 @@ namespace SharingKnowledge.Data.Repository.Contracts
 
         Task<OpenCourse> GetCourseForUpdateAsync(int courseId);
 
+        Task<OpenCourse> GetCourseForDeleteAsync(int courseId);
+
+        Task<bool> DeleteCourseAsync(OpenCourse openCourse);
+
         Task<bool> SaveChangesAsync();
     }
 }
