@@ -187,14 +187,13 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<OpenCourse?> GetCourseByIdAsync(int id)
         {
-            return await context.OpenCourses.FindAsync(id);
+            return await courseRepository.GetCourseByIdAsync(id);
         }
 
         public async Task AddCourseToStudentAsync(OpenCourse course, Student student)
         {
-           
             student.EnrolledCourses.Add(course);
-            await context.SaveChangesAsync();
+            await courseRepository.SaveChangesAsync();
         }
 
         public async Task<ICollection<OpenCoursesMyCoursesViewModel>> GetAllStudentCourses(Student student)
@@ -219,7 +218,7 @@ namespace SharingKnowledge.Services.Core
             if (student.EnrolledCourses.Any(c => c.Id == course.Id))
             {
                 student.EnrolledCourses.Remove(course);
-                await context.SaveChangesAsync();
+                await courseRepository.SaveChangesAsync();
             }
         }
 

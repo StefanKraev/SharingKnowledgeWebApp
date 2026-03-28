@@ -125,5 +125,10 @@ namespace SharingKnowledge.Data.Repository
                 return false;
             }
         }
+
+        public async Task<OpenCourse?> GetCourseByIdAsync(int id)
+        {
+            return await dbContext.OpenCourses.FindAsync(id);
+        }
     }
 }
