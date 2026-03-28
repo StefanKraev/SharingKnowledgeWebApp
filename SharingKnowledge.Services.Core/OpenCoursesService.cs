@@ -44,14 +44,17 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<OpenCoursesDetailsViewModel?> GetCourseDetailsAsync(int id)
         {
-            OpenCoursesDetailsViewModel viewModel = await courseRepository.GetOpenCourseByIdAsync(id);
+            OpenCourse? openCourse = await courseRepository.GetOpenCourseByIdAsync(id);
 
-            if (viewModel == null)
+            return openCourse == null ? null : new OpenCoursesDetailsViewModel
             {
-                return null;
-            }
-
-            return viewModel;
+                Title = openCourse.Title,
+                Description = openCourse.Description,
+                StartDate = openCourse.StartDate,
+                ImageUrl = openCourse.ImageUrl,
+                CategoryName = openCourse.Category?.Name ?? "General",
+                AuthorEmail = openCourse.Creator?.Email ?? "Unknown"
+            };
         }
 
         public async Task CreateCourseAsync(OpenCoursesCreateInputModel inputModel, string userId)
@@ -77,13 +80,12 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<OpenCoursesCreateInputModel> CreateCourseInput()
         {
-            OpenCoursesCreateInputModel openCoursesCreateInputModel = 
-                new OpenCoursesCreateInputModel
-            {
-                Categories = await GetCategoriesAsync()
-            };
+            IEnumerable<CourseCategory> categories = await courseRepository.GetAllCategories();
 
-            return openCoursesCreateInputModel;
+            return new OpenCoursesCreateInputModel
+            {
+                Categories = categories
+            };
         }
 
         public async Task<OpenCoursesCreateInputModel?> GetCourseForEditAsync(int id, string userId)
@@ -238,15 +240,17 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<IEnumerable<CourseCategory>> GetCategoriesAsync()
         {
-            return await context.CourseCategories
-                .AsNoTracking()
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+            return await courseRepository.GetAllCategories();
         }
 
         public async Task<bool> CategoryExistsAsync(int categoryId)
         {
-            return await context.CourseCategories.AnyAsync(c => c.Id == categoryId);
+            if (categoryId <= 0)
+            {
+                return false;
+            }
+
+            return await courseRepository.ExistsCategoryAsync(categoryId);
         }
     }
 }

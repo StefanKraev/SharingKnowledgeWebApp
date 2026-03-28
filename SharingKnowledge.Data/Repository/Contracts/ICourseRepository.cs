@@ -1,4 +1,5 @@
-﻿using SharingKnowledge.Models;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using SharingKnowledge.Models;
 using SharingKnowledge.ViewModels.Courses;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,10 @@ namespace SharingKnowledge.Data.Repository.Contracts
 
         Task<bool> AddOpenCourseAsync(OpenCourse openCourse);
 
-        Task<OpenCoursesDetailsViewModel> GetOpenCourseByIdAsync(int openCourseId);
+        Task<OpenCourse> GetOpenCourseByIdAsync(int openCourseId);
+
+        Task<IEnumerable<CourseCategory>> GetAllCategories();
+
+        Task<bool> ExistsCategoryAsync(int categoryId);
     }
 }

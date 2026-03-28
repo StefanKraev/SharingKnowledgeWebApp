@@ -23,7 +23,7 @@ namespace SharingKnowledge.Data.Repository
         {
             await dbContext.AddAsync(openCourse);
             int resultCode = await dbContext.SaveChangesAsync();
-            return resultCode == 1;
+            return resultCode > 0;
         }
 
         public async Task<IEnumerable<OpenCourse>> GetAllOpenCoursesAsync()
@@ -54,21 +54,30 @@ namespace SharingKnowledge.Data.Repository
             }
         }
 
-        public async Task<OpenCoursesDetailsViewModel?> GetOpenCourseByIdAsync(int openCourseId)
+        public async Task<OpenCourse?> GetOpenCourseByIdAsync(int openCourseId)
         {
-            return await dbContext.OpenCourses
+            return await dbContext
+                .OpenCourses
                 .AsNoTracking()
-                .Where(oc => oc.Id == openCourseId)
-                .Select(oc => new OpenCoursesDetailsViewModel
-                {
-                    Title = oc.Title,
-                    Description = oc.Description,
-                    StartDate = oc.StartDate,
-                    ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category.Name,
-                    AuthorEmail = oc.Creator.Email ?? "Email not found!"
-                })
-                .SingleOrDefaultAsync();
+                .Include(c => c.Category)
+                .Include(c => c.Creator)
+                .SingleOrDefaultAsync(c => c.Id == openCourseId);
+        }
+
+        public async Task<IEnumerable<CourseCategory>> GetAllCategories()
+        {
+            return await dbContext
+                .CourseCategories
+                .AsNoTracking()
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ExistsCategoryAsync(int categoryId)
+        {
+            return await dbContext
+                .CourseCategories
+                .AnyAsync(c => c.Id == categoryId);
         }
     }
 }
