@@ -79,5 +79,31 @@ namespace SharingKnowledge.Data.Repository
                 .CourseCategories
                 .AnyAsync(c => c.Id == categoryId);
         }
+
+        public async Task<OpenCourse?> GetCourseByIdForEditAsync(int openCourseId)
+        {
+            return await dbContext
+                .OpenCourses
+                .Include(c => c.Category)
+                .SingleOrDefaultAsync(c => c.Id == openCourseId);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            try
+            {
+                return await dbContext.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<OpenCourse?> GetCourseForUpdateAsync(int courseId)
+        {
+            return await dbContext.OpenCourses
+                .SingleOrDefaultAsync(oc => oc.Id == courseId);
+        }
     }
 }

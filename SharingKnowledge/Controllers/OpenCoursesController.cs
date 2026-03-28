@@ -170,7 +170,7 @@ namespace SharingKnowledge.Controllers
                 }
 
                 inputModel.Categories = 
-                    (await openCoursesService.GetCategoriesAsync()).ToList();
+                    (await openCoursesService.GetCategoriesAsync());
 
                 return View(inputModel);
             }

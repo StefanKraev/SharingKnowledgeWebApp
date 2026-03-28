@@ -90,10 +90,7 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<OpenCoursesCreateInputModel?> GetCourseForEditAsync(int id, string userId)
         {
-            OpenCourse? openCourse = await context
-                .OpenCourses
-                .Include(oc => oc.Category)
-                .SingleOrDefaultAsync(oc => oc.Id == id);
+            OpenCourse? openCourse = await courseRepository.GetCourseByIdForEditAsync(id);
 
             if (openCourse == null)
             {
@@ -112,7 +109,7 @@ namespace SharingKnowledge.Services.Core
                 StartDate = openCourse.StartDate,
                 ImageUrl = openCourse.ImageUrl,
                 CategoryId = openCourse.CategoryId,
-                Categories = await GetCategoriesAsync()
+                Categories = await courseRepository.GetAllCategories()
             };
 
             return inputModel;
@@ -120,9 +117,7 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<bool> EditCourseAsync(int id, OpenCoursesCreateInputModel inputModel, string userId)
         {
-            OpenCourse ?openCourse = await context
-                .OpenCourses
-                .SingleOrDefaultAsync(oc => oc.Id == id);
+            OpenCourse ?openCourse = await courseRepository.GetCourseForUpdateAsync(id);
 
             if (openCourse == null || openCourse.CreatorId != userId)
             {
@@ -137,7 +132,7 @@ namespace SharingKnowledge.Services.Core
 
             try
             {
-                await context.SaveChangesAsync();
+                await courseRepository.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)

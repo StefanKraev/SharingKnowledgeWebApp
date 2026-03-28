@@ -18,5 +18,11 @@ namespace SharingKnowledge.Data.Repository.Contracts
         Task<IEnumerable<CourseCategory>> GetAllCategories();
 
         Task<bool> ExistsCategoryAsync(int categoryId);
+
+        Task<OpenCourse> GetCourseByIdForEditAsync(int courseId);
+
+        Task<OpenCourse> GetCourseForUpdateAsync(int courseId);
+
+        Task<bool> SaveChangesAsync();
     }
 }
