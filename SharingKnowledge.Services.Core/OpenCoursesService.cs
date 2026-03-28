@@ -17,9 +17,12 @@ namespace SharingKnowledge.Services.Core
     {
         private readonly ICourseRepository courseRepository;
 
-        public OpenCoursesService(ICourseRepository courseRepository)
+        private readonly IStudentRepository studentRepository;
+
+        public OpenCoursesService(ICourseRepository courseRepository, IStudentRepository studentRepository)
         {
             this.courseRepository = courseRepository;
+            this.studentRepository = studentRepository;
         }
 
         public async Task<IEnumerable<OpenCoursesMyCoursesViewModel>> GetAllCoursesAsync(string userId)
@@ -179,12 +182,7 @@ namespace SharingKnowledge.Services.Core
 
         public async Task<Student?> GetStudentByIdAsync(string userId)
         {
-            return await context
-                .Users
-                .OfType<Student>()
-                .Include(s => s.EnrolledCourses)
-                .ThenInclude(c => c.Category)
-                .FirstOrDefaultAsync(s => s.Id == userId);
+            return await studentRepository.GetStudentByIdAsync(userId);
         }
 
         public async Task<OpenCourse?> GetCourseByIdAsync(int id)
