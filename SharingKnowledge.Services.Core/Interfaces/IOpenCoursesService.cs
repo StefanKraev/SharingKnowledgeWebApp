@@ -27,14 +27,14 @@ namespace SharingKnowledge.Services.Core.Interfaces
 
         Task<bool> CategoryExistsAsync(int categoryId); //existCategory
 
-        Task<Student> GetStudentByIdAsync(string userId); //studentById
+        /*Task<Student> GetStudentByIdAsync(string userId);*/ //studentById
 
-        Task<OpenCourse> GetCourseByIdAsync(int id); //courseById
+        /*Task<OpenCourse> GetCourseByIdAsync(int id);*/ //courseById
 
-        Task AddCourseToStudentAsync(OpenCourse course, Student student); //addCourseToStudent
+        /*Task AddCourseToStudentAsync(OpenCourse course, Student student);*/ //addCourseToStudent
 
-        Task<ICollection<OpenCoursesMyCoursesViewModel>> GetAllStudentCourses(Student student); //DisplayMyCourses
+        /*Task<ICollection<OpenCoursesMyCoursesViewModel>> GetAllStudentCourses(Student student);*/ //DisplayMyCourses
 
-        Task UnenrollStudentAsync(Student student, OpenCourse course); //unenrollCourse
+        /*Task UnenrollStudentAsync(Student student, OpenCourse course);*/ //unenrollCourse
     }
 }

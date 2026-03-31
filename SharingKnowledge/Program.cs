@@ -28,6 +28,8 @@ namespace SharingKnowledge
 
             builder.Services.AddScoped<IOpenCoursesService, OpenCoursesService>();
 
+            builder.Services.AddScoped<IMyCoursesService, MyCoursesService>();
+
             builder.Services.AddDefaultIdentity<Student>(options => { //User may have many roles other then student
                                                                       //but for now student is the default choice
                 Identity(options, builder.Configuration);

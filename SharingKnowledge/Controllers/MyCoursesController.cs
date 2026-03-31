@@ -7,11 +7,11 @@ namespace SharingKnowledge.Controllers
 {
     public class MyCoursesController : ControllerBase
     {
-        private readonly IOpenCoursesService openCoursesService;
+        private readonly IMyCoursesService myCoursesService;
 
-        public MyCoursesController(IOpenCoursesService openCoursesService)
+        public MyCoursesController(IMyCoursesService myCoursesService)
         {
-            this.openCoursesService = openCoursesService;
+            this.myCoursesService = myCoursesService;
         }
 
         [HttpGet]
@@ -25,7 +25,7 @@ namespace SharingKnowledge.Controllers
             }
 
             Student student =
-                await openCoursesService.GetStudentByIdAsync(userId);
+                await myCoursesService.GetStudentByIdAsync(userId);
 
             if (student == null)
             {
@@ -33,7 +33,7 @@ namespace SharingKnowledge.Controllers
             }
 
             ICollection<OpenCoursesMyCoursesViewModel> myCourses =
-                await openCoursesService.GetAllStudentCourses(student);
+                await myCoursesService.GetAllStudentCourses(student);
 
             return View(myCourses);
         }
@@ -49,7 +49,7 @@ namespace SharingKnowledge.Controllers
             }
 
             Student student =
-                await openCoursesService.GetStudentByIdAsync(userId);
+                await myCoursesService.GetStudentByIdAsync(userId);
 
             if (student == null)
             {
@@ -57,7 +57,7 @@ namespace SharingKnowledge.Controllers
             }
 
             OpenCourse course =
-                await openCoursesService.GetCourseByIdAsync(courseId);
+                await myCoursesService.GetCourseByIdAsync(courseId);
 
             if (course == null)
             {
@@ -66,7 +66,7 @@ namespace SharingKnowledge.Controllers
 
             if (!student.EnrolledCourses.Any(c => c.Id == courseId))
             {
-                await openCoursesService.AddCourseToStudentAsync(course, student);
+                await myCoursesService.AddCourseToStudentAsync(course, student);
             }
 
             return RedirectToAction("Index");
@@ -83,7 +83,7 @@ namespace SharingKnowledge.Controllers
             }
 
             Student student =
-                await openCoursesService.GetStudentByIdAsync(userId);
+                await myCoursesService.GetStudentByIdAsync(userId);
 
             if (student == null)
             {
@@ -91,14 +91,14 @@ namespace SharingKnowledge.Controllers
             }
 
             OpenCourse course =
-                await openCoursesService.GetCourseByIdAsync(courseId);
+                await myCoursesService.GetCourseByIdAsync(courseId);
 
             if (course == null)
             {
                 return NotFound();
             }
 
-            await openCoursesService.UnenrollStudentAsync(student, course);
+            await myCoursesService.UnenrollStudentAsync(student, course);
 
             return RedirectToAction(nameof(Index));
         }
