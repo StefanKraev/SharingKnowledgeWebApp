@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SharingKnowledge.Web.ViewModels.Courses
 {
-    public class OpenCoursesMyCoursesViewModel
+    public class MyCoursesViewModel
     {
         [Required]
         public int Id { get; set; }

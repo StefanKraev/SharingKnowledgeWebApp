@@ -24,11 +24,11 @@ namespace SharingKnowledge.Services.Core
             await courseRepository.SaveChangesAsync();
         }
 
-        public async Task<ICollection<OpenCoursesMyCoursesViewModel>> GetAllStudentCourses(Student student)
+        public async Task<ICollection<MyCoursesViewModel>> GetAllStudentCourses(Student student)
         {
             return student
                 .EnrolledCourses
-                .Select(c => new OpenCoursesMyCoursesViewModel
+                .Select(c => new MyCoursesViewModel
                 {
                     Id = c.Id,
                     Title = c.Title,

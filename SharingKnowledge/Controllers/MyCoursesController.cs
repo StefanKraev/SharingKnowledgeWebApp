@@ -32,7 +32,7 @@ namespace SharingKnowledge.Controllers
                 return BadRequest();
             }
 
-            ICollection<OpenCoursesMyCoursesViewModel> myCourses =
+            ICollection<MyCoursesViewModel> myCourses =
                 await myCoursesService.GetAllStudentCourses(student);
 
             return View(myCourses);

@@ -34,7 +34,7 @@ namespace SharingKnowledge.Controllers
         {
             string? userId = GetUserId();
 
-            IEnumerable<OpenCoursesMyCoursesViewModel> coursesAllViewModels =
+            IEnumerable<MyCoursesViewModel> coursesAllViewModels =
                 await openCoursesService.GetAllCoursesAsync(userId);
 
             return View(coursesAllViewModels);

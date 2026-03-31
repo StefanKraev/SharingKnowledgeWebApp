@@ -25,12 +25,12 @@ namespace SharingKnowledge.Services.Core
             this.studentRepository = studentRepository;
         }
 
-        public async Task<IEnumerable<OpenCoursesMyCoursesViewModel>> GetAllCoursesAsync(string userId)
+        public async Task<IEnumerable<MyCoursesViewModel>> GetAllCoursesAsync(string userId)
         {
             IEnumerable<OpenCourse> allOpenCourses = await courseRepository.GetAllOpenCoursesAsync();
 
             return allOpenCourses
-                .Select(oc => new OpenCoursesMyCoursesViewModel
+                .Select(oc => new MyCoursesViewModel
                 {
                     Id = oc.Id,
                     Title = oc.Title,

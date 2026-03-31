@@ -10,7 +10,7 @@ namespace SharingKnowledge.Services.Core.Interfaces
     {
         Task<Student> GetStudentByIdAsync(string userId);
 
-        Task<ICollection<OpenCoursesMyCoursesViewModel>> GetAllStudentCourses(Student student);
+        Task<ICollection<MyCoursesViewModel>> GetAllStudentCourses(Student student);
 
         Task<OpenCourse> GetCourseByIdAsync(int id);
 
