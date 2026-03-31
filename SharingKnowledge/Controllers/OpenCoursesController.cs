@@ -238,29 +238,29 @@ namespace SharingKnowledge.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> MyCourses()
-        {
-            string? userId = GetUserId();
+        //[HttpGet]
+        //public async Task<IActionResult> MyCourses()
+        //{
+        //    string? userId = GetUserId();
 
-            if (userId == null)
-            {
-                return BadRequest();
-            }
+        //    if (userId == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            Student student = 
-                await openCoursesService.GetStudentByIdAsync(userId);
+        //    Student student = 
+        //        await openCoursesService.GetStudentByIdAsync(userId);
 
-            if(student == null)
-            {
-                return BadRequest();
-            }
+        //    if(student == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            ICollection<OpenCoursesMyCoursesViewModel> myCourses = 
-                await openCoursesService.GetAllStudentCourses(student);
+        //    ICollection<OpenCoursesMyCoursesViewModel> myCourses = 
+        //        await openCoursesService.GetAllStudentCourses(student);
 
-            return View(myCourses);
-        }
+        //    return View(myCourses);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> Enroll(int courseId)
@@ -296,35 +296,35 @@ namespace SharingKnowledge.Controllers
             return RedirectToAction("MyCourses");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Unenroll(int courseId)
-        {
-            string? userId = GetUserId();
+        //[HttpPost]
+        //public async Task<IActionResult> Unenroll(int courseId)
+        //{
+        //    string? userId = GetUserId();
 
-            if (userId == null)
-            {
-                return BadRequest();
-            } 
+        //    if (userId == null)
+        //    {
+        //        return BadRequest();
+        //    } 
 
-            Student student = 
-                await openCoursesService.GetStudentByIdAsync(userId);
+        //    Student student = 
+        //        await openCoursesService.GetStudentByIdAsync(userId);
 
-            if (student == null)
-            {
-                return NotFound();
-            }
+        //    if (student == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            OpenCourse course = 
-                await openCoursesService.GetCourseByIdAsync(courseId);
+        //    OpenCourse course = 
+        //        await openCoursesService.GetCourseByIdAsync(courseId);
 
-            if (course == null)
-            {
-                return NotFound();
-            } 
+        //    if (course == null)
+        //    {
+        //        return NotFound();
+        //    } 
 
-            await openCoursesService.UnenrollStudentAsync(student, course);
+        //    await openCoursesService.UnenrollStudentAsync(student, course);
 
-            return RedirectToAction(nameof(MyCourses));
-        }
+        //    return RedirectToAction(nameof(MyCourses));
+        //}
     }
 }
