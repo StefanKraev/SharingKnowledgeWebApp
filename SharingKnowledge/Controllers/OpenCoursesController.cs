@@ -262,39 +262,39 @@ namespace SharingKnowledge.Controllers
         //    return View(myCourses);
         //}
 
-        [HttpPost]
-        public async Task<IActionResult> Enroll(int courseId)
-        {
-            string? userId = GetUserId();
+        //[HttpPost]
+        //public async Task<IActionResult> Enroll(int courseId)
+        //{
+        //    string? userId = GetUserId();
 
-            if(userId == null)
-            {
-                return BadRequest();
-            }
+        //    if(userId == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            Student student = 
-                await openCoursesService.GetStudentByIdAsync(userId);
+        //    Student student = 
+        //        await openCoursesService.GetStudentByIdAsync(userId);
 
-            if (student == null)
-            {
-                return NotFound();
-            } 
+        //    if (student == null)
+        //    {
+        //        return NotFound();
+        //    } 
 
-            OpenCourse course = 
-                await openCoursesService.GetCourseByIdAsync(courseId);
+        //    OpenCourse course = 
+        //        await openCoursesService.GetCourseByIdAsync(courseId);
 
-            if (course == null)
-            {
-                return NotFound();
-            }
+        //    if (course == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (!student.EnrolledCourses.Any(c => c.Id == courseId))
-            {
-                await openCoursesService.AddCourseToStudentAsync(course, student);
-            }
+        //    if (!student.EnrolledCourses.Any(c => c.Id == courseId))
+        //    {
+        //        await openCoursesService.AddCourseToStudentAsync(course, student);
+        //    }
 
-            return RedirectToAction("MyCourses");
-        }
+        //    return RedirectToAction("MyCourses");
+        //}
 
         //[HttpPost]
         //public async Task<IActionResult> Unenroll(int courseId)
@@ -304,9 +304,9 @@ namespace SharingKnowledge.Controllers
         //    if (userId == null)
         //    {
         //        return BadRequest();
-        //    } 
+        //    }
 
-        //    Student student = 
+        //    Student student =
         //        await openCoursesService.GetStudentByIdAsync(userId);
 
         //    if (student == null)
@@ -314,13 +314,13 @@ namespace SharingKnowledge.Controllers
         //        return NotFound();
         //    }
 
-        //    OpenCourse course = 
+        //    OpenCourse course =
         //        await openCoursesService.GetCourseByIdAsync(courseId);
 
         //    if (course == null)
         //    {
         //        return NotFound();
-        //    } 
+        //    }
 
         //    await openCoursesService.UnenrollStudentAsync(student, course);
 
