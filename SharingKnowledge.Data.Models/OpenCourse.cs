@@ -29,8 +29,7 @@ namespace SharingKnowledge.Models
 
         public virtual CourseCategory Category { get; set; } = null!;
 
-        [Required]
-        public string CreatorId { get; set; } = null!; //string because not sure if db has guid type
+        public int CreatorId { get; set; }
 
         [ForeignKey(nameof(CreatorId))]
         public virtual Student Creator { get; set; } = null!;

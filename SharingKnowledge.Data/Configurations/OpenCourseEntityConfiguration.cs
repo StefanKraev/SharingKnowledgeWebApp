@@ -18,7 +18,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 03, 15),
                 ImageUrl = "https://example.com/images/csharp-intro.png",
                 CategoryId = 1,
-                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
+                CreatorId = 1
             },
             new OpenCourse
             {
@@ -28,7 +28,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 04, 01),
                 ImageUrl = "https://example.com/images/razor-pages.png",
                 CategoryId = 1,
-                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
+                CreatorId = 2
             },
             new OpenCourse
             {
@@ -38,7 +38,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 05, 05),
                 ImageUrl = "https://example.com/images/efcore.png",
                 CategoryId = 2,
-                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
+                CreatorId = 3
             },
             new OpenCourse
             {
@@ -48,7 +48,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 03, 28),
                 ImageUrl = "https://example.com/images/html-css.png",
                 CategoryId = 3,
-                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
+                CreatorId = 4
             },
             new OpenCourse
             {
@@ -58,7 +58,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 04, 20),
                 ImageUrl = "https://example.com/images/js-fundamentals.png",
                 CategoryId = 3,
-                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
+                CreatorId = 5
             },
             new OpenCourse
             {
@@ -68,7 +68,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 06, 01),
                 ImageUrl = "https://example.com/images/dotnet-testing.png",
                 CategoryId = 2,
-                CreatorId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
+                CreatorId = 6
             }
         };
 
