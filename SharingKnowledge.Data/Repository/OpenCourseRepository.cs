@@ -30,6 +30,7 @@ namespace SharingKnowledge.Data.Repository
         {
             return await dbContext.OpenCourses
                 .AsNoTracking()
+                .Include(c => c.Creator)
                 .Include(c => c.Category)
                 .Include(c => c.EnrolledStudents)
                 .OrderByDescending(c => c.StartDate)
