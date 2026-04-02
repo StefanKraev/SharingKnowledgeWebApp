@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SharingKnowledge.Data.Models;
+using System.ComponentModel.DataAnnotations;
 using static SharingKnowledge.Common.ValidationConstrains;
 
 namespace SharingKnowledge.Models
@@ -13,5 +14,7 @@ namespace SharingKnowledge.Models
         public string Name { get; set; } = null!;
 
         public virtual ICollection<OpenCourse> Courses { get; set; } = new List<OpenCourse>();
+
+        public virtual ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }
