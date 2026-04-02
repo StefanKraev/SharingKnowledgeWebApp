@@ -32,6 +32,6 @@ namespace SharingKnowledge.Data.Models
 
         public virtual CourseCategory Category { get; set; } = null!;
 
-        public virtual ICollection<StudentBook> UserBooks { get; set; } = new List<StudentBook>();
+        public virtual ICollection<StudentBook> BookStudents { get; set; } = new List<StudentBook>();
     }
 }

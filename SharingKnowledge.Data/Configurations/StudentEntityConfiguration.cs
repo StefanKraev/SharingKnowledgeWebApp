@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharingKnowledge.Models;
+using static SharingKnowledge.Common.ValidationConstrains;
 
 namespace SharingKnowledge.Data.Configurations
 {
@@ -13,6 +14,11 @@ namespace SharingKnowledge.Data.Configurations
                 .HasIndex(s => s.FacultyNumber) //for fast searching of student.
                 .IsUnique(); //cannot be written as an attribute [key] as it will
                              //be in conflict with IdentityUser::id
+
+            entity
+                .Property(s => s.FacultyNumber)
+                .IsRequired()
+                .HasMaxLength(StudentFNMaxLen);
 
             entity
                 .HasOne(s => s.User)
