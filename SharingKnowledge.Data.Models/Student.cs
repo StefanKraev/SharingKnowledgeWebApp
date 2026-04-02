@@ -1,11 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SharingKnowledge.Data.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static SharingKnowledge.Common.ValidationConstrains;
 
 namespace SharingKnowledge.Models
 {
-    public class Student : IdentityUser
+    public class Student
     {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        public string UserId { get; set; } = null!;
+
+        [ForeignKey(nameof(UserId))]
+        public virtual ApplicationUser User { get; set; } = null!;
+
         [Required]
         [MaxLength(StudentFNMaxLen)]
         [RegularExpression(StudentFNRegularExpression)]

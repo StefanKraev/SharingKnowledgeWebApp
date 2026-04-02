@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using SharingKnowledge.Data;
+using SharingKnowledge.Data.Models;
 using SharingKnowledge.Data.Repository;
 using SharingKnowledge.Data.Repository.Contracts;
 using SharingKnowledge.Models;
@@ -30,7 +31,7 @@ namespace SharingKnowledge
 
             builder.Services.AddScoped<IMyCoursesService, MyCoursesService>();
 
-            builder.Services.AddDefaultIdentity<Student>(options => { //User may have many roles other then student
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => { //User may have many roles other then student
                                                                       //but for now student is the default choice
                 Identity(options, builder.Configuration);
             })

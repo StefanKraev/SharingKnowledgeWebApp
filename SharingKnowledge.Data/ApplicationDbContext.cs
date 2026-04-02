@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SharingKnowledge.Data.Models;
 using SharingKnowledge.Models;
 
 namespace SharingKnowledge.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : IdentityDbContext<Student>(options)
+    public class ApplicationDbContext
+        : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<OpenCourse> OpenCourses { get; set; } = null!;
 
         public virtual DbSet<CourseCategory> CourseCategories { get; set; } = null!;
 
-        //DbSet for model:Student is not added to avoid double mapping
+        public virtual DbSet<Student> Students { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
