@@ -25,5 +25,7 @@ namespace SharingKnowledge.Models
         public virtual ICollection<OpenCourse> EnrolledCourses { get; set; } = new List<OpenCourse>();
 
         public virtual ICollection<OpenCourse> CreatedCourses { get; set; } = new List<OpenCourse>();
+
+        public virtual ICollection<StudentBook> StudentBooks { get; set; } = new List<StudentBook>();
     }
 }

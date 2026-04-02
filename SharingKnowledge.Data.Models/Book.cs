@@ -25,12 +25,13 @@ namespace SharingKnowledge.Data.Models
         [MaxLength(BookImageUrlMaxLength)]
         public string? ImageUrl { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(CourseCategory))]
         public int CategoryId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(CategoryId))]
 
         public virtual CourseCategory Category { get; set; } = null!;
 
-        public virtual ICollection<Book> UserBooks { get; set; } = new List<Book>();
+        public virtual ICollection<StudentBook> UserBooks { get; set; } = new List<StudentBook>();
     }
 }
