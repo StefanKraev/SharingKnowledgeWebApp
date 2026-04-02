@@ -61,6 +61,7 @@ namespace SharingKnowledge.Data.Repository
                 .AsNoTracking()
                 .Include(c => c.Category)
                 .Include(c => c.Creator)
+                .ThenInclude(s => s.User)
                 .SingleOrDefaultAsync(c => c.Id == openCourseId);
         }
 

@@ -41,7 +41,7 @@ namespace SharingKnowledge.Services.Core
                     ImageUrl = oc.ImageUrl,
                     CategoryName = oc.Category?.Name ?? "General",
                     CreatorId = oc.CreatorId,
-                    IsEnrolled = userId != null && oc.EnrolledStudents.Any(s => s.Id == userId)
+                    IsEnrolled = userId != null && oc.EnrolledStudents.Any(s => s.UserId == userId)
                 });
         }
 
@@ -56,7 +56,7 @@ namespace SharingKnowledge.Services.Core
                 StartDate = openCourse.StartDate,
                 ImageUrl = openCourse.ImageUrl,
                 CategoryName = openCourse.Category?.Name ?? "General",
-                AuthorEmail = openCourse.Creator?.Email ?? "Unknown"
+                AuthorEmail = openCourse.Creator?.User?.Email ?? "Unknown"
             };
         }
 

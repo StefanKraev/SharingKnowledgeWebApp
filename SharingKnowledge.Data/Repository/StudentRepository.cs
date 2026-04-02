@@ -18,11 +18,11 @@ namespace SharingKnowledge.Data.Repository
         public async Task<Student?> GetStudentByIdAsync(string studentId)
         {
             return await dbContext
-                .Users
-                .OfType<Student>()
+                .Students
                 .Include(s => s.EnrolledCourses)
                 .ThenInclude(c => c.Category)
-                .FirstOrDefaultAsync(s => s.Id == studentId);
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.UserId == studentId);
         }
 
         public void Dispose()
