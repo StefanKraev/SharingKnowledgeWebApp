@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using SharingKnowledge.Data.Models
 @using SharingKnowledge.Models
-@inject SignInManager<Student> SignInManager
-@inject UserManager<Student> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))

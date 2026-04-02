@@ -42,7 +42,7 @@ else
 
                                 @if (currentUserId != null)
                                 {
-                                    @if (course.CreatorId == currentUserId)
+                                    @if (course.CreatorUserId == currentUserId)
                                     {
                                         <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-warning flex-fill">
                                             <i class="bi bi-pencil-square"></i> Edit

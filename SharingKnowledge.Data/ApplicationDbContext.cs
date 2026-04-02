@@ -8,6 +8,11 @@ namespace SharingKnowledge.Data
     public class ApplicationDbContext
         : IdentityDbContext<ApplicationUser>
     {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
         public virtual DbSet<OpenCourse> OpenCourses { get; set; } = null!;
 
         public virtual DbSet<CourseCategory> CourseCategories { get; set; } = null!;

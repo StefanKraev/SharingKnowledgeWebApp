@@ -41,6 +41,7 @@ namespace SharingKnowledge.Services.Core
                     ImageUrl = oc.ImageUrl,
                     CategoryName = oc.Category?.Name ?? "General",
                     CreatorId = oc.CreatorId,
+                    CreatorUserId = oc.Creator?.UserId ?? string.Empty,
                     IsEnrolled = userId != null && oc.EnrolledStudents.Any(s => s.UserId == userId)
                 });
         }
@@ -62,6 +63,13 @@ namespace SharingKnowledge.Services.Core
 
         public async Task CreateCourseAsync(OpenCoursesCreateInputModel inputModel, string userId)
         {
+            Student student = await studentRepository.GetStudentByIdAsync(userId);
+
+            if (student == null)
+            {
+                throw new Exception();
+            }
+
             OpenCourse openCourse = new OpenCourse
             {
                 Title = inputModel.Title,
@@ -69,7 +77,7 @@ namespace SharingKnowledge.Services.Core
                 StartDate = inputModel.StartDate,
                 ImageUrl = inputModel.ImageUrl,
                 CategoryId = inputModel.CategoryId,
-                CreatorId = userId,
+                CreatorId = student.Id,
                 EnrolledStudents = new List<Student>()
             };
 
@@ -100,7 +108,7 @@ namespace SharingKnowledge.Services.Core
                 return null;
             }
 
-            if (userId == null || openCourse.CreatorId != userId)
+            if (userId == null || openCourse.Creator?.UserId != userId)
             {
                 return null;
             }
@@ -122,7 +130,7 @@ namespace SharingKnowledge.Services.Core
         {
             OpenCourse ?openCourse = await courseRepository.GetCourseForUpdateAsync(id);
 
-            if (openCourse == null || openCourse.CreatorId != userId)
+            if (openCourse == null || openCourse.Creator?.UserId != userId)
             {
                 return false;
             }
@@ -154,7 +162,7 @@ namespace SharingKnowledge.Services.Core
                 return null;
             }
 
-            if (userId == null || openCourse.CreatorId != userId)
+            if (userId == null || openCourse.Creator?.UserId != userId)
             {
                 return null;
             }
@@ -172,7 +180,7 @@ namespace SharingKnowledge.Services.Core
         {
             OpenCourse? course = await courseRepository.GetCourseForDeleteAsync(id);
 
-            if (course == null || course.CreatorId != userId)
+            if (course == null || course.Creator?.UserId != userId)
             {
                 return false;
             }

@@ -86,6 +86,7 @@ namespace SharingKnowledge.Data.Repository
             return await dbContext
                 .OpenCourses
                 .Include(c => c.Category)
+                .Include(c => c.Creator)
                 .SingleOrDefaultAsync(c => c.Id == openCourseId);
         }
 
@@ -104,6 +105,7 @@ namespace SharingKnowledge.Data.Repository
         public async Task<OpenCourse?> GetCourseForUpdateAsync(int courseId)
         {
             return await dbContext.OpenCourses
+                .Include(c => c.Creator)
                 .SingleOrDefaultAsync(oc => oc.Id == courseId);
         }
 
@@ -111,6 +113,7 @@ namespace SharingKnowledge.Data.Repository
         {
             return await dbContext
                 .OpenCourses
+                .Include(c => c.Creator)
                 .FirstOrDefaultAsync(c => c.Id == courseId);
         }
 

@@ -28,7 +28,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 04, 01),
                 ImageUrl = "https://example.com/images/razor-pages.png",
                 CategoryId = 1,
-                CreatorId = 2
+                CreatorId = 1
             },
             new OpenCourse
             {
@@ -38,7 +38,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 05, 05),
                 ImageUrl = "https://example.com/images/efcore.png",
                 CategoryId = 2,
-                CreatorId = 3
+                CreatorId = 1
             },
             new OpenCourse
             {
@@ -48,7 +48,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 03, 28),
                 ImageUrl = "https://example.com/images/html-css.png",
                 CategoryId = 3,
-                CreatorId = 4
+                CreatorId = 1
             },
             new OpenCourse
             {
@@ -58,7 +58,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 04, 20),
                 ImageUrl = "https://example.com/images/js-fundamentals.png",
                 CategoryId = 3,
-                CreatorId = 5
+                CreatorId = 1
             },
             new OpenCourse
             {
@@ -68,7 +68,7 @@ namespace SharingKnowledge.Data.Configurations
                 StartDate = new DateTime(2026, 06, 01),
                 ImageUrl = "https://example.com/images/dotnet-testing.png",
                 CategoryId = 2,
-                CreatorId = 6
+                CreatorId = 1
             }
         };
 
