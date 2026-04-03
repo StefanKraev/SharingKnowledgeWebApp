@@ -88,8 +88,9 @@ namespace SharingKnowledge
             options.SignIn.RequireConfirmedEmail = configurationManager.GetValue<bool>("IdentityOptions:SignIn:RequiredConfirmedEmail");
 
             options.Lockout.MaxFailedAccessAttempts = configurationManager.GetValue<int>("IdentityOptions:Lockout:MaxFailedAttempts");
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(configurationManager.GetValue<int>("IdentityOptions:Lockout:LockoutDuration"));
-
+            // Inside the Identity method:
+            var lockoutValue = configurationManager.GetValue<string>("IdentityOptions:Lockout:DefaultLockoutTimeSpan");
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.Parse(lockoutValue ?? "00:05:00");
             options.Password.RequireDigit = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireDigit");
             options.Password.RequireUppercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireUppercase");
             options.Password.RequireLowercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireLowercase");
