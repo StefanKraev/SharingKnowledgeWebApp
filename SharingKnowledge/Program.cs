@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using SharingKnowledge.Data;
+using SharingKnowledge.Data.Configurations;
 using SharingKnowledge.Data.Models;
 using SharingKnowledge.Data.Repository;
 using SharingKnowledge.Data.Repository.Contracts;
@@ -41,6 +42,13 @@ namespace SharingKnowledge
 
             var app = builder.Build();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                
+                DataBaseSeeder.SeedRoles(services);
+            }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -60,6 +68,10 @@ namespace SharingKnowledge
             app.UseAuthorization();
 
             app.MapStaticAssets();
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}")
+                .WithStaticAssets();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
