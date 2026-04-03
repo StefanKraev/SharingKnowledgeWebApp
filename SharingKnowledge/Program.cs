@@ -31,11 +31,12 @@ namespace SharingKnowledge
 
             builder.Services.AddScoped<IMyCoursesService, MyCoursesService>();
 
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options => { //User may have many roles other then student
-                                                                      //but for now student is the default choice
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
                 Identity(options, builder.Configuration);
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultUI()
+                .AddDefaultTokenProviders();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -71,7 +72,7 @@ namespace SharingKnowledge
 
         private static void Identity(IdentityOptions options, ConfigurationManager configurationManager)
         {
-            //options.SignIn.RequireConfirmedAccount = false;
+            options.SignIn.RequireConfirmedAccount = configurationManager.GetValue<bool>("IdentityOptions:SignIn:RequiredConfirmedAccount");
             options.SignIn.RequireConfirmedEmail = configurationManager.GetValue<bool>("IdentityOptions:SignIn:RequiredConfirmedEmail");
 
             options.Lockout.MaxFailedAccessAttempts = configurationManager.GetValue<int>("IdentityOptions:Lockout:MaxFailedAttempts");
