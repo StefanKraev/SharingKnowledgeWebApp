@@ -111,8 +111,8 @@ namespace SharingKnowledge.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -156,8 +156,8 @@ namespace SharingKnowledge.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -192,6 +192,29 @@ namespace SharingKnowledge.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Book",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    AuthorName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Book", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Book_CourseCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "CourseCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenCourses",
                 columns: table => new
                 {
@@ -216,6 +239,32 @@ namespace SharingKnowledge.Data.Migrations
                     table.ForeignKey(
                         name: "FK_OpenCourses_Students_CreatorId",
                         column: x => x.CreatorId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentBook",
+                columns: table => new
+                {
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    AddedToLibraryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentBook", x => new { x.StudentId, x.BookId });
+                    table.ForeignKey(
+                        name: "FK_StudentBook_Book_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Book",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StudentBook_Students_StudentId",
+                        column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -248,7 +297,7 @@ namespace SharingKnowledge.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "007e37ed-27e5-43cb-a8b7-a3b14d054f45", 0, "86778f79-246e-4861-8271-6c589679199c", "admin@sharingknowledge.com", true, false, null, "ADMIN@SHARINGKNOWLEDGE.COM", "GHOSTADMIN", "AQAAAAIAAYagAAAAEGVx7nHYW18d6vEjqAitwoxLyms6pEPIbLVGX7rivzEBJMpHtztkFthMsfbEaXgWvQ==", null, false, "3235650d-6e47-49f3-9d0a-04664879201a", false, "GhostAdmin" });
+                values: new object[] { "d5812fbc-b5f3-46c1-8eb1-e6f817687dab", 0, "b33c37ed-22e5-43cb-a8b7-a3b14d054f45", "student0@sharingknowledge.com", true, false, null, "STUDENT0@SHARINGKNOWLEDGE.COM", "STUDENT0@SHARINGKNOWLEDGE.COM", "AQAAAAIAAYagAAAAENK6YuTmQ7A7r+jy034pVbEJPS/LW5g4UXgEDumLOv2+Np/aof2+1PR3wMxUefv5AQ==", null, false, "a22b37ed-11e5-43cb-a8b7-a3b14d054f45", false, "student0@sharingknowledge.com" });
 
             migrationBuilder.InsertData(
                 table: "CourseCategories",
@@ -270,7 +319,7 @@ namespace SharingKnowledge.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Students",
                 columns: new[] { "Id", "FacultyNumber", "UserId" },
-                values: new object[] { 1, "0MI0000000", "007e37ed-27e5-43cb-a8b7-a3b14d054f45" });
+                values: new object[] { 1, "0MI0000000", "d5812fbc-b5f3-46c1-8eb1-e6f817687dab" });
 
             migrationBuilder.InsertData(
                 table: "OpenCourses",
@@ -325,6 +374,11 @@ namespace SharingKnowledge.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Book_CategoryId",
+                table: "Book",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenCourses_CategoryId",
                 table: "OpenCourses",
                 column: "CategoryId");
@@ -338,6 +392,11 @@ namespace SharingKnowledge.Data.Migrations
                 name: "IX_OpenCourseStudent_EnrolledStudentsId",
                 table: "OpenCourseStudent",
                 column: "EnrolledStudentsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentBook_BookId",
+                table: "StudentBook",
+                column: "BookId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_FacultyNumber",
@@ -374,16 +433,22 @@ namespace SharingKnowledge.Data.Migrations
                 name: "OpenCourseStudent");
 
             migrationBuilder.DropTable(
+                name: "StudentBook");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "OpenCourses");
 
             migrationBuilder.DropTable(
-                name: "CourseCategories");
+                name: "Book");
 
             migrationBuilder.DropTable(
                 name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "CourseCategories");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

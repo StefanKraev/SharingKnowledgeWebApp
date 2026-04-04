@@ -26,16 +26,14 @@ namespace SharingKnowledge.Data.Configurations
                 .HasForeignKey<Student>(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            string ghostAdminUserId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45";
 
-            var adminProfile = new Student
+            //Hardcoding student as seed data for testing purposes.
+            entity.HasData(new Student
             {
-                Id = 1, 
-                UserId = ghostAdminUserId,
+                Id = 1,
+                UserId = "d5812fbc-b5f3-46c1-8eb1-e6f817687dab",
                 FacultyNumber = "0MI0000000"
-            };
-
-            entity.HasData(adminProfile);
+            });
         }
     }
 }

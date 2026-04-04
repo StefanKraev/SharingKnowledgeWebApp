@@ -102,12 +102,10 @@ namespace SharingKnowledge.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -144,12 +142,10 @@ namespace SharingKnowledge.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -241,20 +237,78 @@ namespace SharingKnowledge.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "007e37ed-27e5-43cb-a8b7-a3b14d054f45",
+                            Id = "d5812fbc-b5f3-46c1-8eb1-e6f817687dab",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "86778f79-246e-4861-8271-6c589679199c",
-                            Email = "admin@sharingknowledge.com",
+                            ConcurrencyStamp = "b33c37ed-22e5-43cb-a8b7-a3b14d054f45",
+                            Email = "student0@sharingknowledge.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@SHARINGKNOWLEDGE.COM",
-                            NormalizedUserName = "GHOSTADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGVx7nHYW18d6vEjqAitwoxLyms6pEPIbLVGX7rivzEBJMpHtztkFthMsfbEaXgWvQ==",
+                            NormalizedEmail = "STUDENT0@SHARINGKNOWLEDGE.COM",
+                            NormalizedUserName = "STUDENT0@SHARINGKNOWLEDGE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAENK6YuTmQ7A7r+jy034pVbEJPS/LW5g4UXgEDumLOv2+Np/aof2+1PR3wMxUefv5AQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3235650d-6e47-49f3-9d0a-04664879201a",
+                            SecurityStamp = "a22b37ed-11e5-43cb-a8b7-a3b14d054f45",
                             TwoFactorEnabled = false,
-                            UserName = "GhostAdmin"
+                            UserName = "student0@sharingknowledge.com"
                         });
+                });
+
+            modelBuilder.Entity("SharingKnowledge.Data.Models.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Book");
+                });
+
+            modelBuilder.Entity("SharingKnowledge.Data.Models.StudentBook", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedToLibraryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.HasKey("StudentId", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("StudentBook");
                 });
 
             modelBuilder.Entity("SharingKnowledge.Models.CourseCategory", b =>
@@ -461,7 +515,7 @@ namespace SharingKnowledge.Data.Migrations
                         {
                             Id = 1,
                             FacultyNumber = "0MI0000000",
-                            UserId = "007e37ed-27e5-43cb-a8b7-a3b14d054f45"
+                            UserId = "d5812fbc-b5f3-46c1-8eb1-e6f817687dab"
                         });
                 });
 
@@ -531,6 +585,36 @@ namespace SharingKnowledge.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SharingKnowledge.Data.Models.Book", b =>
+                {
+                    b.HasOne("SharingKnowledge.Models.CourseCategory", "Category")
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("SharingKnowledge.Data.Models.StudentBook", b =>
+                {
+                    b.HasOne("SharingKnowledge.Data.Models.Book", "Book")
+                        .WithMany("BookStudents")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharingKnowledge.Models.Student", "Student")
+                        .WithMany("StudentBooks")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("SharingKnowledge.Models.OpenCourse", b =>
                 {
                     b.HasOne("SharingKnowledge.Models.CourseCategory", "Category")
@@ -561,14 +645,23 @@ namespace SharingKnowledge.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SharingKnowledge.Data.Models.Book", b =>
+                {
+                    b.Navigation("BookStudents");
+                });
+
             modelBuilder.Entity("SharingKnowledge.Models.CourseCategory", b =>
                 {
+                    b.Navigation("Books");
+
                     b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("SharingKnowledge.Models.Student", b =>
                 {
                     b.Navigation("CreatedCourses");
+
+                    b.Navigation("StudentBooks");
                 });
 #pragma warning restore 612, 618
         }
