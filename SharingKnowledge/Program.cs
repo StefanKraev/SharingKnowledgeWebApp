@@ -47,6 +47,7 @@ namespace SharingKnowledge
                 var services = scope.ServiceProvider;
                 
                 DataBaseSeeder.SeedRoles(services);
+                DataBaseSeeder.AssignAdminRole(services);
             }
 
             // Configure the HTTP request pipeline.
