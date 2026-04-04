@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using SharingKnowledge.Data.Models;
 
 namespace SharingKnowledge.Data.Configurations
 {
@@ -15,12 +16,45 @@ namespace SharingKnowledge.Data.Configurations
                 if (!roleExists)
                 {
                     var result = roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
-                    if(!result.Succeeded)
+                    if (!result.Succeeded)
                     {
                         throw new Exception($"Failed to create role: {roleName}");
                     }
                 }
             }
+        }
+
+        public static void AssignAdminRole(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var adminEmail = "admin@sharingknowledge.com";
+            var adminUser = userManager.FindByEmailAsync(adminEmail).GetAwaiter().GetResult();
+
+            if (adminUser == null)
+            {
+                adminUser = new ApplicationUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail
+                };
+                var createUserResult = userManager.CreateAsync(adminUser, "RandomPassword@1").GetAwaiter().GetResult();
+                if (!createUserResult.Succeeded)
+                {
+                    throw new Exception($"Failed to create admin user: {adminEmail}");
+                }
+            }
+
+            var isInRole = userManager.IsInRoleAsync(adminUser, "Admin").GetAwaiter().GetResult();
+            if (!isInRole)
+            {
+                var addRoleResult = userManager.AddToRoleAsync(adminUser, "Admin").GetAwaiter().GetResult();
+                if (!addRoleResult.Succeeded)
+                {
+                    throw new Exception($"Failed to assign admin role to user: {adminEmail}");
+                }
+            }
+
         }
     }
 }
