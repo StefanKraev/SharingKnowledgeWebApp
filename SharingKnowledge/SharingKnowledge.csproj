@@ -28,8 +28,4 @@
     <ProjectReference Include="..\SharingKnowledge.Web.ViewModels\SharingKnowledge.Web.ViewModels.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Views\UserManager\" />
-  </ItemGroup>
-
 </Project>

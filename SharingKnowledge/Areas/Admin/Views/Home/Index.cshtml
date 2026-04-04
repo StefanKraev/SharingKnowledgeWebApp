@@ -1,1 +1,19 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1 class="mb-4">Admin Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">User Management</h5>
+                <p class="card-text">Manage system users, assign roles, and control user access.</p>
+                <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="btn btn-primary">
+                    Go to User Management
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
