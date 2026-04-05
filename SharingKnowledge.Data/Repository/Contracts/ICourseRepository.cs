@@ -9,7 +9,7 @@ namespace SharingKnowledge.Data.Repository.Contracts
 {
     public interface ICourseRepository
     {
-        Task<IEnumerable<OpenCourse>> GetAllOpenCoursesAsync();
+        IQueryable<OpenCourse> GetAllOpenCoursesQuery();
 
         Task<bool> AddOpenCourseAsync(OpenCourse openCourse);
 

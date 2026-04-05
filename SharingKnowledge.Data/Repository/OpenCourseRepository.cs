@@ -26,15 +26,13 @@ namespace SharingKnowledge.Data.Repository
             return resultCode > 0;
         }
 
-        public async Task<IEnumerable<OpenCourse>> GetAllOpenCoursesAsync()
+        public IQueryable<OpenCourse> GetAllOpenCoursesQuery()
         {
-            return await dbContext.OpenCourses
+            return dbContext.OpenCourses
                 .AsNoTracking()
                 .Include(c => c.Creator)
                 .Include(c => c.Category)
-                .Include(c => c.EnrolledStudents)
-                .OrderByDescending(c => c.StartDate)
-                .ToListAsync();
+                .Include(c => c.EnrolledStudents);
         }
 
         public void Dispose()

@@ -9,6 +9,7 @@ using SharingKnowledge.Services.Core.Interfaces;
 using SharingKnowledge.ViewModels.Courses;
 using SharingKnowledge.Web.ViewModels.Courses;
 using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace SharingKnowledge.Services.Core
@@ -25,25 +26,40 @@ namespace SharingKnowledge.Services.Core
             this.studentRepository = studentRepository;
         }
 
-        public async Task<IEnumerable<MyCoursesViewModel>> GetAllCoursesAsync(string userId)
+        public async Task<IEnumerable<MyCoursesViewModel>> GetAllCoursesAsync(string userId, string? searchQuery)
         {
-            IEnumerable<OpenCourse> allOpenCourses = await courseRepository.GetAllOpenCoursesAsync();
+            IQueryable<OpenCourse> allOpenCourses = courseRepository.GetAllOpenCoursesQuery();
 
-            return allOpenCourses
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                allOpenCourses = allOpenCourses
+                    .Where(oc => oc.Title.Contains(searchQuery));
+            }
+
+            IEnumerable<MyCoursesViewModel> materializedCourses = await allOpenCourses
                 .Select(oc => new MyCoursesViewModel
                 {
                     Id = oc.Id,
                     Title = oc.Title,
-                    Description = oc.Description.Length > 100
-                        ? oc.Description.Substring(0, 97) + "..."
-                        : oc.Description,
+                    Description = oc.Description,
                     StartDate = oc.StartDate,
                     ImageUrl = oc.ImageUrl,
-                    CategoryName = oc.Category?.Name ?? "General",
+                    CategoryName = oc.Category.Name ?? "General",
                     CreatorId = oc.CreatorId,
-                    CreatorUserId = oc.Creator?.UserId ?? string.Empty,
+                    CreatorUserId = oc.Creator.UserId ?? string.Empty,
                     IsEnrolled = userId != null && oc.EnrolledStudents.Any(s => s.UserId == userId)
-                });
+                })
+                .ToListAsync();
+
+            foreach (var course in materializedCourses)
+            {
+                if (course.Description.Length > 100)
+                {
+                    course.Description = course.Description.Substring(0, 97) + "...";
+                }
+            }
+
+            return materializedCourses;
         }
 
         public async Task<OpenCoursesDetailsViewModel?> GetCourseDetailsAsync(int id)

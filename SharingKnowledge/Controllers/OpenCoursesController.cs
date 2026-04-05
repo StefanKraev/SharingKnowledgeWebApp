@@ -30,12 +30,14 @@ namespace SharingKnowledge.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchQuery)
         {
             string? userId = GetUserId();
 
             IEnumerable<MyCoursesViewModel> coursesAllViewModels =
-                await openCoursesService.GetAllCoursesAsync(userId);
+                await openCoursesService.GetAllCoursesAsync(userId, searchQuery);
+
+            ViewData["CurrentSearchQuery"] = searchQuery;
 
             return View(coursesAllViewModels);
         }
