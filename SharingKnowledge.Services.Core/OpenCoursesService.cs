@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using SharingKnowledge.Data;
 using SharingKnowledge.Data.Repository;
 using SharingKnowledge.Data.Repository.Contracts;
@@ -26,7 +27,7 @@ namespace SharingKnowledge.Services.Core
             this.studentRepository = studentRepository;
         }
 
-        public async Task<IEnumerable<MyCoursesViewModel>> GetAllCoursesAsync(string userId, string? searchQuery, string? category)
+        public async Task<(IEnumerable<MyCoursesViewModel>, int)> GetAllCoursesAsync(string userId, string? searchQuery, string? category, int pageNumber = 1, int pageSize = 6)
         {
             IQueryable<OpenCourse> allOpenCourses = courseRepository.GetAllOpenCoursesQuery();
 
@@ -41,6 +42,13 @@ namespace SharingKnowledge.Services.Core
                 allOpenCourses = allOpenCourses
                     .Where(oc => oc.Category.Name.ToLower().Contains(category.ToLower()));
             }
+
+            int totalNumberOfCourses = await allOpenCourses.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalNumberOfCourses / (double)pageSize);
+
+            allOpenCourses = allOpenCourses
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
 
             IEnumerable<MyCoursesViewModel> materializedCourses = await allOpenCourses
                 .Select(oc => new MyCoursesViewModel
@@ -65,7 +73,7 @@ namespace SharingKnowledge.Services.Core
                 }
             }
 
-            return materializedCourses;
+            return (materializedCourses, totalPages);
         }
 
         public async Task<OpenCoursesDetailsViewModel?> GetCourseDetailsAsync(int id)
