@@ -44,18 +44,6 @@ else
                         <td>
                             @if (currentUserId != user.Id)
                             {
-                                <select id="roleDropdown-@user.Id" class="form-select form-select-sm w-auto me-2">
-                                    <option value="Manager" selected="@(user.Roles.Contains("Manager") ? "selected" : null)">Manager</option>
-                                    <option value="User" selected="@(user.Roles.Contains("Student") ? "selected" : null)">Student</option>
-                                </select>
-                                <form method="post" asp-action="AssignRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
-                                    <input type="hidden" name="userId" value="@user.Id" />
-                                    <input type="hidden" name="role" id="assignRoleInput-@user.Id" />
-                                    <button type="submit" class="btn btn-primary btn-sm fw-bold px-3 py-2"
-                                            onclick="setRoleValue('@user.Id', 'assignRoleInput')">
-                                        <i class="bi bi-person-plus-fill"></i> Assign
-                                    </button>
-                                </form>
                                 <a asp-area="Admin" asp-controller="UserManagement" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-warning" title="Edit">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>

@@ -7,6 +7,7 @@ using SharingKnowledge.Data.Models;
 using SharingKnowledge.Data.Repository;
 using SharingKnowledge.Data.Repository.Contracts;
 using SharingKnowledge.Models;
+using SharingKnowledge.Services.Admin;
 using SharingKnowledge.Services.Core;
 using SharingKnowledge.Services.Core.Interfaces;
 
@@ -31,6 +32,8 @@ namespace SharingKnowledge
             builder.Services.AddScoped<IOpenCoursesService, OpenCoursesService>();
 
             builder.Services.AddScoped<IMyCoursesService, MyCoursesService>();
+
+            builder.Services.AddScoped<IAdminService, AdminService>();
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
                 Identity(options, builder.Configuration);
