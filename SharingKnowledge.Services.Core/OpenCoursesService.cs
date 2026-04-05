@@ -26,14 +26,20 @@ namespace SharingKnowledge.Services.Core
             this.studentRepository = studentRepository;
         }
 
-        public async Task<IEnumerable<MyCoursesViewModel>> GetAllCoursesAsync(string userId, string? searchQuery)
+        public async Task<IEnumerable<MyCoursesViewModel>> GetAllCoursesAsync(string userId, string? searchQuery, string? category)
         {
             IQueryable<OpenCourse> allOpenCourses = courseRepository.GetAllOpenCoursesQuery();
 
             if (!string.IsNullOrWhiteSpace(searchQuery))
             {
                 allOpenCourses = allOpenCourses
-                    .Where(oc => oc.Title.Contains(searchQuery));
+                    .Where(oc => oc.Title.ToLower().Contains(searchQuery.ToLower()));
+            }
+
+            if(!string.IsNullOrWhiteSpace(category))
+            {
+                allOpenCourses = allOpenCourses
+                    .Where(oc => oc.Category.Name.ToLower().Contains(category.ToLower()));
             }
 
             IEnumerable<MyCoursesViewModel> materializedCourses = await allOpenCourses

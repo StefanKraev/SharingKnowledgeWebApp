@@ -7,7 +7,7 @@ namespace SharingKnowledge.Services.Core.Interfaces
 {
     public interface IOpenCoursesService
     {
-        Task<IEnumerable<MyCoursesViewModel>> GetAllCoursesAsync(string userId, string? searchQuery); //all
+        Task<IEnumerable<MyCoursesViewModel>> GetAllCoursesAsync(string userId, string? searchQuery, string? category); //all
 
         Task<OpenCoursesDetailsViewModel?> GetCourseDetailsAsync(int id); //details
 
