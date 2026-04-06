@@ -240,5 +240,203 @@ namespace SharingKnowledge.Tests
             // Assert
             Xunit.Assert.Null(result);
         }
+
+        [Fact]
+        public async Task EditCourseAsync_WhenOwnerUpdates_ReturnsTrueAndUpdatesData()
+        {
+            // Arrange
+            var userId = "valid-owner";
+            var existingCourse = new OpenCourse
+            {
+                Id = 1,
+                Title = "Old Title",
+                Creator = new Student { UserId = userId }
+            };
+            var inputModel = new OpenCoursesCreateInputModel
+            {
+                Title = "New Title",
+                Description = "Updated Description",
+                CategoryId = 2
+            };
+
+            mockCourseRepo.Setup(r => r.GetCourseForUpdateAsync(1))
+                .ReturnsAsync(existingCourse);
+            mockCourseRepo.Setup(r => r.SaveChangesAsync())
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await service.EditCourseAsync(1, inputModel, userId);
+
+            // Assert
+            Xunit.Assert.True(result);
+            Xunit.Assert.Equal("New Title", existingCourse.Title); // Verify the object was actually updated
+            Xunit.Assert.Equal(2, existingCourse.CategoryId);
+            mockCourseRepo.Verify(r => r.SaveChangesAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task EditCourseAsync_WhenUserIsNotOwner_ReturnsFalse()
+        {
+            // Arrange
+            var ownerId = "actual-owner";
+            var hackerId = "wrong-user";
+            var existingCourse = new OpenCourse
+            {
+                Id = 1,
+                Creator = new Student { UserId = ownerId }
+            };
+
+            mockCourseRepo.Setup(r => r.GetCourseForUpdateAsync(1))
+                .ReturnsAsync(existingCourse);
+
+            // Act
+            var result = await service.EditCourseAsync(1, new OpenCoursesCreateInputModel(), hackerId);
+
+            // Assert
+            Xunit.Assert.False(result);
+            mockCourseRepo.Verify(r => r.SaveChangesAsync(), Times.Never);
+        }
+
+        [Fact]
+        public async Task EditCourseAsync_WhenDatabaseErrorOccurs_ReturnsFalse()
+        {
+            // Arrange
+            var userId = "owner";
+            var existingCourse = new OpenCourse { Creator = new Student { UserId = userId } };
+
+            mockCourseRepo.Setup(r => r.GetCourseForUpdateAsync(1))
+                .ReturnsAsync(existingCourse);
+
+            mockCourseRepo.Setup(r => r.SaveChangesAsync())
+                .ThrowsAsync(new Exception("Database connection lost"));
+
+            // Act
+            var result = await service.EditCourseAsync(1, new OpenCoursesCreateInputModel(), userId);
+
+            // Assert
+            Xunit.Assert.False(result);
+        }
+        [Fact]
+        public async Task GetCourseForDeleteAsync_WhenOwnerRequests_ReturnsDeleteViewModel()
+        {
+            // Arrange
+            var userId = "owner-123";
+            var openCourse = new OpenCourse
+            {
+                Id = 1,
+                Title = "Course to Delete",
+                Creator = new Student { UserId = userId }
+            };
+
+            mockCourseRepo.Setup(r => r.GetCourseByIdForEditAsync(1))
+                .ReturnsAsync(openCourse);
+
+            // Act
+            var result = await service.GetCourseForDeleteAsync(1, userId);
+
+            // Assert
+            Xunit.Assert.NotNull(result);
+            Xunit.Assert.IsType<OpenCoursesDeleteViewModel>(result);
+            Xunit.Assert.Equal(1, result.Id);
+            Xunit.Assert.Equal("Course to Delete", result.Title);
+        }
+
+        [Fact]
+        public async Task GetCourseForDeleteAsync_WhenNonOwnerRequests_ReturnsNull()
+        {
+            // Arrange
+            var ownerId = "owner-id";
+            var hackerId = "hacker-id";
+            var openCourse = new OpenCourse
+            {
+                Id = 1,
+                Creator = new Student { UserId = ownerId }
+            };
+
+            mockCourseRepo.Setup(r => r.GetCourseByIdForEditAsync(1))
+                .ReturnsAsync(openCourse);
+
+            // Act
+            var result = await service.GetCourseForDeleteAsync(1, hackerId);
+
+            // Assert
+            Xunit.Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetCourseForDeleteAsync_WhenCourseDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            mockCourseRepo.Setup(r => r.GetCourseByIdForEditAsync(It.IsAny<int>()))
+                .ReturnsAsync((OpenCourse?)null);
+
+            // Act
+            var result = await service.GetCourseForDeleteAsync(999, "any-user");
+
+            // Assert
+            Xunit.Assert.Null(result);
+        }
+        [Fact]
+        public async Task DeleteCourseAsync_WhenOwnerRequests_ReturnsTrue()
+        {
+            // Arrange
+            var userId = "owner-id";
+            var courseToDelete = new OpenCourse
+            {
+                Id = 1,
+                Creator = new Student { UserId = userId }
+            };
+
+            mockCourseRepo.Setup(r => r.GetCourseForDeleteAsync(1))
+                .ReturnsAsync(courseToDelete);
+
+            mockCourseRepo.Setup(r => r.DeleteCourseAsync(courseToDelete))
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await service.DeleteCourseAsync(1, userId);
+
+            // Assert
+            Xunit.Assert.True(result);
+            mockCourseRepo.Verify(r => r.DeleteCourseAsync(courseToDelete), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteCourseAsync_WhenNotOwner_ReturnsFalseAndDoesNotDelete()
+        {
+            // Arrange
+            var ownerId = "owner-id";
+            var hackerId = "hacker-id";
+            var courseToDelete = new OpenCourse
+            {
+                Id = 1,
+                Creator = new Student { UserId = ownerId }
+            };
+
+            mockCourseRepo.Setup(r => r.GetCourseForDeleteAsync(1))
+                .ReturnsAsync(courseToDelete);
+
+            // Act
+            var result = await service.DeleteCourseAsync(1, hackerId);
+
+            // Assert
+            Xunit.Assert.False(result);
+            mockCourseRepo.Verify(r => r.DeleteCourseAsync(It.IsAny<OpenCourse>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteCourseAsync_WhenCourseNotFound_ReturnsFalse()
+        {
+            // Arrange
+            mockCourseRepo.Setup(r => r.GetCourseForDeleteAsync(It.IsAny<int>()))
+                .ReturnsAsync((OpenCourse?)null);
+
+            // Act
+            var result = await service.DeleteCourseAsync(999, "any-user");
+
+            // Assert
+            Xunit.Assert.False(result);
+            mockCourseRepo.Verify(r => r.DeleteCourseAsync(It.IsAny<OpenCourse>()), Times.Never);
+        }
     }
 }
