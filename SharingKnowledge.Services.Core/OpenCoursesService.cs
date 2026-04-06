@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SharingKnowledge.Data;
 using SharingKnowledge.Data.Repository;
 using SharingKnowledge.Data.Repository.Contracts;
@@ -100,6 +101,11 @@ namespace SharingKnowledge.Services.Core
                 throw new Exception();
             }
 
+            if (inputModel.StartDate.Date < DateTime.Today)
+            {
+                throw new ArgumentException("Course start date cannot be in the past.");
+            }
+
             OpenCourse openCourse = new OpenCourse
             {
                 Title = inputModel.Title,
@@ -163,6 +169,11 @@ namespace SharingKnowledge.Services.Core
             if (openCourse == null || openCourse.Creator?.UserId != userId)
             {
                 return false;
+            }
+
+            if (openCourse.StartDate != inputModel.StartDate && inputModel.StartDate.Date < DateTime.Today)
+            {
+                throw new ArgumentException("You cannot reschedule a course to a date in the past.");
             }
 
             openCourse.Title = inputModel.Title;

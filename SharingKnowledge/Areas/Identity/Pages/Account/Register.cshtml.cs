@@ -21,6 +21,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharingKnowledge.Areas.Identity.Pages.Account
 {
@@ -97,6 +98,8 @@ namespace SharingKnowledge.Areas.Identity.Pages.Account
             public string Password { get; set; }
 
             [Required]
+            [RegularExpression(@"^\dMI0\d00\d{3}$",
+                ErrorMessage = "Faculty Number must follow the format: dMI0d00ddd where d is a digit")]
             [StringLength(10, MinimumLength = 5, ErrorMessage = "Faculty number must be between 5 and 10 characters.")]
             [Display(Name = "Faculty Number")]
             public string FacultyNumber { get; set; }
@@ -125,6 +128,13 @@ namespace SharingKnowledge.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                var fnExists = await _context.Students.AnyAsync(s => s.FacultyNumber == Input.FacultyNumber);
+
+                if (fnExists)
+                {
+                    ModelState.AddModelError("Input.FacultyNumber", "This Faculty Number is already registered.");
+                    return Page();
+                }
                 // STEP 1: Create the Identity User (The Account)
                 // This MUST be an ApplicationUser to work with _userManager
                 var user = CreateUser();

@@ -36,7 +36,7 @@ namespace SharingKnowledge
             builder.Services.AddScoped<IAdminService, AdminService>();
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
-                Identity(options, builder.Configuration);
+                builder.Configuration.GetSection("IdentityOptions").Bind(options);
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
@@ -119,14 +119,17 @@ namespace SharingKnowledge
             options.SignIn.RequireConfirmedEmail = configurationManager.GetValue<bool>("IdentityOptions:SignIn:RequiredConfirmedEmail");
 
             options.Lockout.MaxFailedAccessAttempts = configurationManager.GetValue<int>("IdentityOptions:Lockout:MaxFailedAttempts");
-            // Inside the Identity method:
             var lockoutValue = configurationManager.GetValue<string>("IdentityOptions:Lockout:DefaultLockoutTimeSpan");
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.Parse(lockoutValue ?? "00:05:00");
+
             options.Password.RequireDigit = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireDigit");
             options.Password.RequireUppercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireUppercase");
             options.Password.RequireLowercase = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireLowercase");
             options.Password.RequireNonAlphanumeric = configurationManager.GetValue<bool>("IdentityOptions:Password:RequireNonAlphanumeric");
-            
+
+            options.Password.RequiredLength = configurationManager.GetValue<int>("IdentityOptions:Password:RequiredLength");
+            options.Password.RequiredUniqueChars = configurationManager.GetValue<int>("IdentityOptions:Password:RequiredUniqueChars");
+
 
 
         }

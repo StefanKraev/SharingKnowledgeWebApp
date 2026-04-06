@@ -104,6 +104,13 @@ namespace SharingKnowledge.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(nameof(inputModel.StartDate), ex.Message);
+
+                inputModel.Categories = (await openCoursesService.GetCategoriesAsync()).ToList();
+                return View(inputModel);
+            }
             catch (OpenCourseCreationFaliureExcpetion exception)
             {
                 logger.LogError(exception, OpenCourseCreationFailureMessage);
@@ -182,15 +189,32 @@ namespace SharingKnowledge.Controllers
                 return View(inputModel);
             }
 
-            bool isSuccess = 
-                await openCoursesService.EditCourseAsync(id, inputModel, userId);
-
-            if (!isSuccess)
+            try
             {
-                return NotFound();
-            }
+                bool isSuccess = await openCoursesService.EditCourseAsync(id, inputModel, userId);
 
-            return RedirectToAction(nameof(Index));
+                if (!isSuccess)
+                {                
+                    return NotFound();
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(nameof(inputModel.StartDate), ex.Message);
+
+                inputModel.Categories = await openCoursesService.GetCategoriesAsync();
+                return View(inputModel);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Unexpected error occurred while editing course {Id}", id);
+
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                inputModel.Categories = await openCoursesService.GetCategoriesAsync();
+                return View(inputModel);
+            }
         }
 
         [HttpGet]
