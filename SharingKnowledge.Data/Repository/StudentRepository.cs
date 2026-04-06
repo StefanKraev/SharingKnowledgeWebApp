@@ -25,6 +25,14 @@ namespace SharingKnowledge.Data.Repository
                 .FirstOrDefaultAsync(s => s.UserId == studentId);
         }
 
+        public async Task<int?> GetStudentIdByIdAsync(string studentId)
+        {
+            return await dbContext.Students
+                .Where(s => s.UserId == studentId)
+                .Select(s => s.Id)
+                .FirstOrDefaultAsync(); 
+        }
+
         public void Dispose()
         {
             Dispose(true);

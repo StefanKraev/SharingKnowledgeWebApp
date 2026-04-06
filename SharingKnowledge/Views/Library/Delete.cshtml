@@ -1,0 +1,35 @@
+﻿@model SharingKnowledge.Web.ViewModels.Books.DetailsBookViewModel
+
+@{
+    ViewData["Title"] = "Delete Book - " + (Model?.Title ?? "Book");
+}
+
+<h1 class="mb-4 text-danger">Delete Book</h1>
+
+<div class="alert alert-warning">
+    <strong>Warning:</strong> You are about to permanently delete the following book. This action cannot be undone.
+</div>
+
+<div class="card mb-4 shadow-sm">
+    @if (!string.IsNullOrWhiteSpace(Model?.ImageUrl))
+    {
+        <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Title" style="object-fit:cover; height:280px;" />
+    }
+    <div class="card-body">
+        <h3 class="card-title">@Model.Title</h3>
+        <p class="mb-1 text-muted"><small>by @Model.AuthorName</small></p>
+        <p class="mb-1"><span class="badge bg-secondary">@Model.CategoryName</span></p>
+        <hr />
+        <p class="card-text">@Model.Description</p>
+    </div>
+</div>
+
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" asp-controller="Library" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>

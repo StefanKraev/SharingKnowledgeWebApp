@@ -32,6 +32,12 @@ namespace SharingKnowledge.Data.Models
 
         public virtual CourseCategory Category { get; set; } = null!;
 
+        [Required]
+        public string PublisherId { get; set; } = null!;
+
+        [ForeignKey(nameof(PublisherId))]
+        public virtual ApplicationUser Publisher { get; set; } = null!;
+
         public virtual ICollection<StudentBook> BookStudents { get; set; } = new List<StudentBook>();
     }
 }
