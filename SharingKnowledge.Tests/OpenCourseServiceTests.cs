@@ -136,5 +136,109 @@ namespace SharingKnowledge.Tests
             await Xunit.Assert.ThrowsAsync<OpenCourseCreationFaliureExcpetion>(() =>
              service.CreateCourseAsync(inputModel, userId));
         }
+
+        [Fact]
+        public async Task CreateCourseInput_ShouldReturnModelWithCategoris()
+        {
+            // Arrange
+            var categoriesList = new List<CourseCategory>
+            {
+                new CourseCategory { Id = 1, Name = "Development" },
+                new CourseCategory { Id = 2, Name = "Business" }
+            };
+
+            mockCourseRepo.Setup(r => r.GetAllCategories())
+                .ReturnsAsync(categoriesList);
+
+            // Act
+            var result = await service.CreateCourseInput();
+
+            // Assert
+            Xunit.Assert.NotNull(result);
+            Xunit.Assert.NotNull(result.Categories);
+            Xunit.Assert.Equal(2, result.Categories.Count());
+            Xunit.Assert.Contains(result.Categories, c => c.Name == "Development");
+        }
+
+        [Fact]
+        public async Task CreateCourseInput_ShouldReturnEmptyList_WhenNoCategorysExist()
+        {
+            // Arrange
+            mockCourseRepo.Setup(r => r.GetAllCategories())
+                .ReturnsAsync(new List<CourseCategory>());
+
+            // Act
+            var result = await service.CreateCourseInput();
+
+            // Assert
+            Xunit.Assert.NotNull(result);
+            Xunit.Assert.Empty(result.Categories);
+        }
+
+        [Fact]
+        public async Task GetCourseForEditAsync_WhenOwnerRequests_ReturnsMappedCourse()
+        {
+            // Arrange
+            var userId = "owner-id";
+            var openCourse = new OpenCourse
+            {
+                Id = 1,
+                Title = "Original Title",
+                Creator = new Student { UserId = userId },
+                CategoryId = 5
+            };
+            var categories = new List<CourseCategory> { new CourseCategory { Id = 5, Name = "IT" } };
+
+            mockCourseRepo.Setup(r => r.GetCourseByIdForEditAsync(1))
+                .ReturnsAsync(openCourse);
+            mockCourseRepo.Setup(r => r.GetAllCategories())
+                .ReturnsAsync(categories);
+
+            // Act
+            var result = await service.GetCourseForEditAsync(1, userId);
+
+            // Assert
+            Xunit.Assert.NotNull(result);
+            Xunit.Assert.Equal("Original Title", result.Title);
+            Xunit.Assert.Equal(5, result.CategoryId);
+            Xunit.Assert.NotEmpty(result.Categories);
+        }
+
+        [Fact]
+        public async Task GetCourseForEditAsync_WrongUserRequests_ReturnsNull()
+        {
+            // Arrange
+            var ownerId = "actual-owner";
+            var hackerId = "attacker-id";
+
+            var openCourse = new OpenCourse
+            {
+                Id = 1,
+                Creator = new Student { UserId = ownerId }
+            };
+
+            mockCourseRepo.Setup(r => r.GetCourseByIdForEditAsync(1))
+                .ReturnsAsync(openCourse);
+
+            // Act
+            var result = await service.GetCourseForEditAsync(1, hackerId);
+
+            // Assert
+            Xunit.Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetCourseForEditAsync_WhenCourseDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            mockCourseRepo.Setup(r => r.GetCourseByIdForEditAsync(It.IsAny<int>()))
+                .ReturnsAsync((OpenCourse?)null);
+
+            // Act
+            var result = await service.GetCourseForEditAsync(999, "any-user");
+
+            // Assert
+            Xunit.Assert.Null(result);
+        }
     }
 }
