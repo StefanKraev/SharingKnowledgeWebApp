@@ -72,18 +72,28 @@ namespace SharingKnowledge
 
             app.UseAuthentication();
 
-            app.Use((context, next) =>
+            app.Use(async (context, next) =>
             {
+                context.Response.Headers.Append("Content-Security-Policy",
+                    "default-src 'self'; " +
+                    "script-src 'self'; " + 
+                    "style-src 'self' https://cdn.jsdelivr.net; " + 
+                    "img-src 'self' data:; " +
+                    "font-src 'self'; " +
+                    "frame-ancestors 'none';");
+
+                context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+
                 if (context.User.Identity?.IsAuthenticated == true && context.Request.Path == "/")
                 {
                     if (context.User.IsInRole("Admin"))
                     {
                         context.Response.Redirect("/Admin/Home/Index");
-                        return Task.CompletedTask;
+                        return;
                     }
-
                 }
-                return next();
+
+                await next();
             });
 
             app.UseAuthorization();

@@ -39,6 +39,7 @@ namespace SharingKnowledge.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Enroll(int courseId)
         {
             string? userId = GetUserId();
@@ -73,6 +74,7 @@ namespace SharingKnowledge.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Unenroll(int courseId)
         {
             string? userId = GetUserId();

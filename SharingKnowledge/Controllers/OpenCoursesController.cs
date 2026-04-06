@@ -75,6 +75,7 @@ namespace SharingKnowledge.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OpenCoursesCreateInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -150,6 +151,7 @@ namespace SharingKnowledge.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]int id, OpenCoursesCreateInputModel inputModel)
         {
             if (id <= 0)
@@ -218,6 +220,7 @@ namespace SharingKnowledge.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete([FromRoute] int id, OpenCoursesDeleteViewModel viewModel)
         {
             if (id <= 0)
