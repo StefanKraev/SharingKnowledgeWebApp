@@ -19,6 +19,10 @@ namespace SharingKnowledge.Data
 
         public virtual DbSet<Student> Students { get; set; } = null!;
 
+        public virtual DbSet<Book> Books { get; set; } = null!;
+
+        public virtual DbSet<StudentBook> StudentBooks { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

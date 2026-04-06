@@ -25,9 +25,13 @@ namespace SharingKnowledge
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();
+
             builder.Services.AddScoped<ICourseRepository, OpenCourseRepository>();
 
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+
+            builder.Services.AddScoped<ILibraryService, LibraryService>();
 
             builder.Services.AddScoped<IOpenCoursesService, OpenCoursesService>();
 
