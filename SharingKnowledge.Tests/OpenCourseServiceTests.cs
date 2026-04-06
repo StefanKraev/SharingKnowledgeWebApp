@@ -6,7 +6,6 @@ using SharingKnowledge.Services.Common.Exceptions;
 using SharingKnowledge.Services.Core;
 using SharingKnowledge.ViewModels.Courses;
 using Xunit;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace SharingKnowledge.Tests
 {
