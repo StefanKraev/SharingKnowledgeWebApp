@@ -32,6 +32,7 @@ namespace SharingKnowledge.Services.Core
             IEnumerable<Book> books = await libraryRepository.GetAllBooksAsync();
 
             int? studentIntId = null;
+
             if (userId != null)
             {
                 studentIntId = await studentRepository.GetStudentIdByIdAsync(userId);
@@ -62,6 +63,11 @@ namespace SharingKnowledge.Services.Core
 
         public async Task CreateBookAsync(BookCreateInputModel inputModel, string userId)
         {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
+            }
+
             Book newBook = new Book()
             {
                 Title = inputModel.Title,
