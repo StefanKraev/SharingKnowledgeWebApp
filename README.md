@@ -119,14 +119,14 @@ SharingKnowledgeWebApp/
 
 ✅ Search and Filter functionality for courses
 
-🛡️ Security & Validation
+## 🛡️ Security & Validation
 ASP.NET Core Identity: Secure authentication and role-based authorization.
 
 Anti-Forgery: Implementation of [ValidateAntiForgeryToken] on all POST actions.
 
 Server-Side Validation: Data annotations ensure data integrity before persistence.
 
-💻 Usage
+## 💻 Usage
 Register/Login: Navigate to /Register or /Login.
 
 Browse: Click "Show me the courses!" in the navbar.
@@ -160,7 +160,7 @@ Apply migrations:
 Bash
 dotnet ef migrations add InitialCreate
 dotnet ef database update
-⚙️ Configuration
+## ⚙️ Configuration
 Example Identity settings in appsettings.json:
 
 JSON
@@ -180,7 +180,7 @@ JSON
 [!WARNING]
 Never commit sensitive data to source control. Use Environment Variables for secrets.
 
-🤝 Contributing
+## 🤝 Contributing
 Fork the repository.
 
 Create a branch: git checkout -b feature/your-feature-name.
@@ -191,10 +191,10 @@ Push: git push origin feature/your-feature-name.
 
 Open a Pull Request.
 
-📄 License
+## 📄 License
 This project is licensed under the MIT License.
 
-📬 Contact
+## 📬 Contact
 Stefan Kraev – @StefanKraev
 
 Project Link: https://github.com/StefanKraev/SharingKnowledgeWebApp
