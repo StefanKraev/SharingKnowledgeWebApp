@@ -1,7 +1,7 @@
 # SharingKnowledgeWebApp
 # 🚀 Sharing Knowledge - Where everyone can learn
 
-> This project empowers students to engage in peer-to-peer learning through a library of student-led open courses!
+> This project empowers students to engage in peer-to-peer learning through a library of student-led open courses and sharing learning resources!
 
 ![.NET Version](https://img.shields.io/badge/.NET-10.0-purple)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-10.0-blue)
@@ -13,12 +13,15 @@
 
 - [About the Project](#about-the-project)
 - [Technologies Used](#technologies-used)
+- [Architecture & Design Decisions](#architecture-&-design-decisions)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
 - [Features](#features)
 - [Usage](#usage)
+- [Service Layer & Business Logic](#service-layer-&-business-logic)
 - [Database Setup](#database-setup)
+- [Unit Testing](#unit-testing)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
@@ -28,7 +31,7 @@
 
 ## 📖 About the Project
 
-I developed this project to master the core concepts of ASP.NET, specifically focusing on MVC architecture, Razor Pages, and server-side rendering. The platform is designed for peer-to-peer education, enabling students to both share their expertise and learn from the experiences of others. Users have the autonomy to create, manage, and enroll in a variety of open courses.
+I developed this project to master the core concepts of ASP.NET, specifically focusing on MVC architecture, Razor Pages, and server-side rendering. The platform is designed for peer-to-peer education, enabling students to both share their expertise and learn from the experiences of others. Users have the autonomy to create, manage, and enroll in a variety of open courses and share science literature which they find useful.
 
 ---
 
@@ -46,6 +49,18 @@ I developed this project to master the core concepts of ASP.NET, specifically fo
 | Microsoft.EntityFrameworkCore.SqlServer             | 10.0.2   | Database Provider                |
 | Microsoft.EntityFrameworkCore.Tools                 | 10.0.2   | Enables PowerShell commands      |
 | jQuery                                              | 3.7.1    | Simplifies client interactivity  |
+
+---
+
+## 🏗️ Architecture & Design Decisions
+
+The application is built using a **Clean Architecture** approach to ensure that business logic is decoupled from the UI and the Database.
+
+* **N-Tier Implementation**: Strict separation of concerns across Web, Service, and Data layers.
+* **Repository Pattern**: Data access is abstracted using `ILibraryRepository` and `IStudentRepository` to facilitate easier testing and maintenance.
+* **ApplicationUser Wrapper**: Utilizes a custom wrapper around `IdentityUser` to extend user profiles while maintaining compatibility with ASP.NET Core Identity.
+* **DTO/ViewModel Pattern**: Strict use of ViewModels (e.g., `DetailsBookViewModel`, `EditBookInputModel`) to prevent over-posting and keep UI logic separate from Domain Models.
+* **Ownership Security**: Server-side validation ensures that only the `PublisherId` associated with a record can perform sensitive actions like `Edit` or `Delete`.
 
 ---
 
@@ -93,30 +108,35 @@ The app will be available at `https://localhost:7069`.
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Structure ⚙️
 
 ```
-YourProjectName/
+SharingKnowledgeWebApp/
 │
-├── Controllers/          # MVC Controllers
-├── Models/               # Domain models and ViewModels
-├── Views/                # Razor Views (.cshtml)
-├── Data/                 # DbContext and migrations
-├── Services/             # Business logic / service layer
-├── wwwroot/              # Static files (CSS, JS, images)
-├── appsettings.json      # App configuration
-└── Program.cs            # App entry point and middleware setup
+|
+├── Data──├── Data                                 #Database Configurations
+|         └── Models                               #Entity Modles
+| 
+├── Services──├── Common                           #Custom Exceptions
+|             └── Core                             #Business Logic
+├── Tests                                          #Unit Tests
+|               
+├── Web──├── SharingKnowledge                      #Entry Point & Middlewares
+|        └── ViewModels                            #Self Explanatory
+|          
+└── CommonValidations── ├── OutputMessages         #Custom Output Messages
+                        └── ValidaitonConstrains   #Entity Validations Constrains
 ```
 
 ---
 
 ## ✨ Features
 
-- [ ] User registration and login (ASP.NET Identity)
-- [ ] CRUD operations for [OpenCourse]
-- [ ] RESTful API endpoints
-- [ ] Input validation (server-side & client-side)
-- [ ] Responsive UI with Bootstrap
+- [x] **Identity Management**: Secure user registration and login using ASP.NET Identity.
+- [x] **Course/Book Management**: Full CRUD operations for educational resources.
+- [x] **Enrollment System**: Students can browse, view details, and enroll in courses to build a personal collection.
+- [x] **Ownership Protection**: Edit/Delete buttons are context-aware, and server-side checks verify the publisher's identity.
+- [x] **Role-Based Navigation**: The UI dynamically adjusts (e.g., hiding admin links from students) based on user roles.
 
 ---
 
@@ -133,8 +153,22 @@ YourProjectName/
 5.0 Click the section of the navbar named "Show my courses" view all enrolled courses.
 5.1 Click the button "Leave" on one of the courses to remove a course from the enrolled courses.
 6 To delete a created course go to section "Show me the courses!" and click on the button bellow "Delete". Students who have enrolled this course will automatically lose this course from "My Courses".
-
+7.0 Click on button "Show me the books" on the navigation bar to display all books.
+7.1 Click on button "Details" in index book page on a specific book to access book details.
+7.2 When user has registered a book buttons "Edit" and "Delete" are available when in details page.
 ```
+
+---
+
+## 📖 Service Layer & Business Logic
+
+The Service Layer acts as the intermediary between the Controller and Repository.
+
+Decoupling: Services handle the translation between unique string userId and internal domain IDs.
+
+Validation: Implements "Fail-Fast" validation (e.g., ensuring a course exists before processing an enrollment).
+
+Security: Methods like GetBookForEditAsync perform an internal check to ensure book.PublisherId == userId before returning data to the UI.
 
 ---
 
@@ -156,6 +190,16 @@ To create and seed the database:
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
+
+---
+## 🧪 Unit Testing
+The project emphasizes stability through comprehensive unit tests:
+
+Service Testing: LibraryServiceTests verify mapping logic and ownership verification using Moq.
+
+Controller Testing: MyCoursesControllerTests verify that actions return the correct ViewResult or RedirectResult by mocking HttpContext and ClaimsPrincipal.
+
+Parallel Execution: Configured to run all test classes simultaneously using xUnit's native concurrency to optimize development speed.
 
 ---
 
@@ -208,4 +252,4 @@ Project Link: [https://github.com/StefanKraev/SharingKnowledgeWebApp](https://gi
 
 ---
 
-*Built as part of the **ASP.NET Fundamentals** course.*
+*Built as part of the **ASP.NET Advanced** course.*
